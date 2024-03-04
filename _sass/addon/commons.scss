@@ -689,9 +689,7 @@ $btn-mb: 0.5rem;
   overflow-y: auto;
   width: $sidebar-width;
   z-index: 99;
-  background: urlo('assets/img/sidebar/sidebar.jpg');
-  background-size: 100% 100%;
-  background-position: center;
+  background: var(--sidebar-bg);
   border-right: 1px solid var(--sidebar-border-color);
 
   /* Hide scrollbar for Chrome, Safari and Opera */
