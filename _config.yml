@@ -16,7 +16,7 @@ timezone: Asia/Seoul
 
 title: Esseikim # the main title
 
-tagline: Flaneuse👣 # it will display as the sub-title
+tagline: 지식의 축적과 성장의 과정 # it will display as the sub-title
 
 description: >- # used by seo meta and the atom feed
   A minimal, responsive and feature-rich Jekyll theme for technical writing.
