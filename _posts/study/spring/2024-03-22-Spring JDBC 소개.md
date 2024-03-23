@@ -351,5 +351,5 @@ public class ActorDTO {
 
 ---
 
-- https://ejbvn.wordpress.com/category/week-2-entity-beans-and-message-driven-beans/day-09-using-jdbc-to-connect-to-a-database/
-- https://velog.io/@byeongju/DataSource-cbd8ln4x
+- <https://ejbvn.wordpress.com/category/week-2-entity-beans-and-message-driven-beans/day-09-using-jdbc-to-connect-to-a-database/>
+- <https://velog.io/@byeongju/DataSource-cbd8ln4x>
