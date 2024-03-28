@@ -59,7 +59,7 @@ class 자동차 {
 ![이미지](/assets/img/study/spring/Spring_IoC%E1%86%9EDI_%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%84%88(1).png)
 
 
-**2)Spring에서 DI가 적용된 예**
+**2) Spring에서 DI가 적용된 예**
 
 - 엔진 type의 v5변수에 아직 인스턴스가 할당되지 않았다. 컨테이너가 v5변수에 인스턴스를 할당해주게 된다.
 - 약속된 어노테이션을 이용해 선언만 하면 스프링 컨테이너가 빈 객체를 생성해 주입해준다.
