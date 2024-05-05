@@ -11,7 +11,7 @@ order: 4
 <div align="center">
   <h3>Flanesue 👣</h3>
   <a href="https://www.notion.so/seikim/Sei-Kim-2d5ac550cc534edda4f0346c86c405bd?pvs=4" target="_blank"><img src="https://img.shields.io/badge/Notion-000000?style=flat&logo=Notion&&logoColor=white"/></a>
-  <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fksiiem%2F&count_bg=%23000000&title_bg=%23000000&icon=github.svg&icon_color=%23FFFFFF&title=GitHub&edge_flat=false"/></a>
+  <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fesseikim%2F&count_bg=%23000000&title_bg=%23000000&icon=github.svg&icon_color=%23FFFFFF&title=GitHub&edge_flat=false"/></a>
 </div>
 
 <hr/>
