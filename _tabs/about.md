@@ -70,6 +70,6 @@ order: 4
   
   <br>
   <hr/>
-  <img src="https://ghchart.rshah.org/219138/esseikim">
+  <img src="https://ghchart.rshah.org/219138/seikim">
 </div>
 
