@@ -1,0 +1,1179 @@
+---
+categories: [Certificate, "[SQLD] Basic"]
+---
+
+Q. 오라클 계층형 질의에 대한 설명으로 가장 적절하지 않은 것은?
+
+> ④
+> 
+
+① START WITH 절은 계층 구조의 시작점을 지정하는 구문이다.
+
+② ORDER SIBLINCS BY 절은 형제 노드 사이에서 정렬을 지정하는 구문이다.
+
+③ 순방향전개란 부모 노드로부터 자식 노드 방향으로 전개하는 것을 말한다.
+
+④ 루트 노드의 LEVEL 값은 0이다.
+
+- 오라클 계층형 질의에서 루트 노드의 LEVEL 값은 1이다.
+- START WITH 절은 계층 구조의 시작점을 지정하는 구문이다. 즉, **루트 데이터를 지정**한다.(**액세스**)
+- ORDER SIBLINGS BY : 형제 노드(동일 LEVEL) 사이에서 정렬을 수행한다.
+
+---
+
+**Q. 아래 SQL의 실행 결과로 가장 적절한 것은?**
+
+| 사원번호 | 사원명 | 입사일자 | 매니저사원번호 |
+| --- | --- | --- | --- |
+| 001 | 홍길동 | 2012-01-01 | <NULL> |
+| 003 | 이순신 | 2013-01-01 | 001 |
+| 004 | 이민정 | 2013-01-01 | 001 |
+| 005 | 이병헌 | 2013-01-01 | <NULL> |
+
+[사원]
+
+| 사원번호 | 사원명 | 입사일자 | 매니저사원번호 |
+| --- | --- | --- | --- |
+| 001 | 홍길동 | 2012-01-01 | <NULL> |
+| 002 | 강감찬 | 2012-01-01 | 001 |
+| 003 | 이순신 | 2013-01-01 | 001 |
+| 004 | 이민정 | 2013-01-01 | 001 |
+| 005 | 이병헌 | 2013-01-01 | <NULL> |
+| 006 | 안성기 | 2014-01-01 | 005 |
+| 007 | 이수근 | 2014-01-01 | 005 |
+| 008 | 김병만 | 2014-01-01 | 005 |
+
+```sql
+SELECT 사원번호, 사원명, 입사일자, 매니저사원번호
+FROM 사원
+START WITH 매니저사원번호 IS NULL 
+CONNECT BY PRIOR 사원번호 = 매니저사원번호
+AND 입사일자 BETWEEN '2013-01-01' AND '2013-12-31' 
+ORDER SIBLINGS BY 사원번호;
+```
+
+- CONNECT BY 절에 작성된 조건절은 WHERE 절에 작성된 조건절과 다르다. **START WITH 절에서 필터링된 시작 데이터는 결과목록에 포함**되며, **이후 CONNECT BY 절에 의해 필터링**된다. 그러므로 매니저 사원번호가 NULL인 데이터는 결과목록에 포함되며, 이후 리커시브 조인에 의해 입사일자가 필터링된다.
+- 강감찬은 CONNECT BY에서 추출되는 행인데 입사일자가 ‘2012-01-01’이므로 필터링된다.
+- 1. START WITH, 2. CONNECT BY, 3. WHERE 조건은 **계층 시작 조건, 계층 전개 조건, 필터 조건**으로 세 가지 조건은 별개이다.(처리 순서대로 번호 부여)
+    - 홍길동, 이병헌은 1에서, 나머지는 2에서 취한 것이며 ORDER SIBLINGS BY(계층 구조 유지하면서 형제들끼리 정렬)로 정렬
+    - 자식은 부모 바로 아래 붙는다.
+- AND PRIOR 입사일자 BETWEEN ‘2013-01-01’ AND ‘2013-12-31’에 대한 결과이다.
+    
+    
+    | 사원번호 | 사원명 | 입사일자 | 매니저사원번호 |
+    | --- | --- | --- | --- |
+    | 001 | 홍길동 | 2012-01-01 | <NULL> |
+    | 005 | 이병헌 | 2013-01-01 | <NULL> |
+    | 006 | 안성기 | 2014-01-01 | 005 |
+    | 007 | 이수근 | 2014-01-01 | 005 |
+    | 008 | 김병만 | 2014-01-01 | 005 |
+    - 계층 쿼리에서 PRIOR는 칼럼 앞에 붙어 직전 행의 칼럼 값임을 표시한다.
+        - 입사일자: 현재 행의 입사일자
+        - PRIOR 입사일자: 부모 행의 입사일자
+    - **PRIOR는 부모의 값이라는 의미**를 가진다. 부모 홍길동의 입사일자가 2013년 범위에 해당하지 않으므로 자식들이 보이지 않고, 부모 이병헌의 입사일자가 2013년 범위에 해당하므로 자식들이 보인다.
+    - 홍길동은 START WITH로 시작한 첫 레벨이기에 포함된다. CONNECT BY는 자식 노드 조건을 결정하며, CONNECT BY에 있는 조건을 START WITH에 적용하지 않는다.
+
+---
+
+Q. 계층형 질의문에 대한 설명으로 가장 적절하지 않은 것은?
+
+> ④
+> 
+
+① SQL Server에서의 계층형 질의문은 **CTE(Common Table Expression)를 재귀 호출**함으로써 계층 구조를 전개한다.
+
+② SQL Server에서의 계층형 질의문은 **앵커 멤버를 실행하여 기본 결과 집합**을 만들고 이후 **재귀 멤버를 지속적으로 실행**한다.
+
+③ 오라클의 계층형 질의문에서 WHERE 절은 **모든 전개를 진행한 이후 필터 조건**으로서 조건을 만족하는 데이터만을 추출하는 데 활용된다.
+
+④ 오라클의 계층형 질의문에서 PRIOR 키워드는 CONNECT BY 절에만 사용할 수 있으며 **'PRIOR 자식 = 부모' 형태**로 사용하면 **순방향 전개**로 수행된다.
+
+- 오라클 계층형 질의문에서 **PRIOR 키워드는 SELECT, WHERE 절에서도 사용**할 수 있다.
+- 계층형 질의(Hierarchical Query)
+    - 테이블에 계층형 데이터가 존재하는 경우 데이터를 조회하기 위해서 계층형 질의(Hierarchical Query)를 사용한다.
+    - 계층형 데이터란 동일 테이블에 계층적으로 상위와 하위 데이터가 포함된 데이터를 말한다.
+    - 예를 들어, 사원 테이블에서는 사원들 사이에 상위 사원(관리자)과 하위 사원 관계가 존재하고 조직 테이블에서는 조직들 사이에 상위 조직과 하위 조직이 존재한다.
+
+---
+
+Q. 아래 실행 결과를 출력하는 SQL로 가장 적절한 것은?
+
+> ①
+> 
+
+[부서]
+
+| 부서코드 | 부서명 | 상위부서코드 |
+| --- | --- | --- |
+| 100 | 아시아지부 | 〈NULL〉 |
+| 110 | 한국지사 | 100 |
+| 111 | 서울지점 | 110 |
+| 112 | 부산지점 | 110 |
+| 120 | 일본지사 | 100 |
+| 121 | 도쿄지점 | 120 |
+| 122 | 오사카지점 | 120 |
+| 130 | 중국지사 | 100 |
+| 131 | 베이징지점 | 130 |
+| 132 | 상하이지점 | 130 |
+| 200 | 남유럽지부 | <NULL> |
+| 210 | 스페인지사 | 200 |
+| 211 | 마드리드지점 | 210 |
+| 212 | 그라나다지점 | 210 |
+| 220 | 포르투갈지사 | 200 |
+| 221 | 리스본지점 | 220 |
+| 222 | 포르투지점 | 220 |
+
+[매출]
+
+| 부서코드 | 매출액 |
+| --- | --- |
+| 111 | 1000 |
+| 112 | 2000 |
+| 121 | 1500 |
+| 122 | 1000 |
+| 131 | 1500 |
+| 132 | 2000 |
+| 211 | 2000 |
+| 212 | 1500 |
+| 221 | 1000 |
+| 222 | 2000 |
+
+[실행 결과]
+
+| 부서코드 | 부서명 | 상위부서코드 | 매출액 | LVL |
+| --- | --- | --- | --- | --- |
+| 100 | 아시아지부 | <NULL> | <NULL> | 2 |
+| 120 | 일본지사 | 100 | <NULL> | 1 |
+| 121 | 도쿄지점 | 120 | 1500 | 2 |
+| 122 | 오사카지점 | 120 | 1000 | 2 |
+
+```sql
+①
+SELECT A.부서코드, A.부서명, A,상위부서코드, B.매출액, LVL
+FROM (
+			SELECT 부서코드, 부서명, 상위부서코드, LEVEL AS LVL 
+			FROM 부서
+			START WITH 부서코드 = '120'
+			CONNECT BY PRIOR 상위부서코드 = 부서코드
+			UNION
+			SELECT 부서코드, 부서명, 상위부서코드, LEVEL AS LVL
+			FROM 부서
+			START WITH 부서코드 ='120'
+			CONNECT BY 상위부서코드 = PRIOR 부서코드
+			) A 
+LEFT OUTER JOIN 매출 B
+ON (A.부서코드 = B.부서코드)
+ORDER BY A.부서코드;
+
+②
+SELECT A.부서코드, A.부서명, A.상위부서코드, B.매출액, LVL
+FROM (
+			SELECT 부서코드, 부서명, 상위부서코드, LEVEL AS IVL
+			FROM 부서
+			START WITH 부서코드 = '100'
+			CONNECT BY 상위부서코드 = PRIOR 부서코드
+			) A 
+LEFT OUTER JOIN 매출 B
+ON (A.부서코드 = B.부서코드)
+ORDER BY A.부서코드;
+
+③ 
+SELECT A.부서코드, A.부서명, A.상위부서코드, B.매출액, LVL 
+FROM (
+			SELECT 부서코드, 부서명, 상위부서코드, LEVEL AS LVL
+			FROM 부서
+			START WITH 부서코드 = '121'
+			CONNECT BY PRIOR 상위부서코드 = 부서코드
+			) A 
+LEFT OUTER JOIN 매출 B
+ON (A.부서코드 = B.부서코드)
+ORDER BY A.부서코드;
+
+④
+SELECT A.부서코드, A.부서명, A.상위부서코드, B.매출액, LVL 
+FROM (
+			SELECT 부서코드, 부서명, 상위부서코드, LEVEL AS LVL 
+			FROM 부서
+			START WITH 부서코드 = (
+													SELECT 부서코드
+													FROM 부서
+													WHERE 상위부서코드 IS NULL 
+													START WITH 부서코드 = '120'
+													CONNECT BY PRIOR 상위부서코드 = 부서코드)
+			CONNECT BY 상위부서코드 = PRIOR 부서코드
+			) A 
+LEFT OUTER JOIN 매출 B
+ON (A.부서코드 = B.부서코드)
+ORDER BY A.부서코드;
+```
+
+- 위의 결과는 중간 레벨인 도쿄지점(120)을 시작으로 상위의 전체 노드(역방향 전개)와 하위의 전체 노드(순방향 전개)를 검색하여 매출액을 출력하는 SQL이다. 부서 테이블의 전체 데이터를 보면 LEVEL은 1~3까지이지만 출력된 데이터의 LEVEL이 1과 2만 출력된 것으로 보면 중간 LEVEL에서 추출된 것을 짐작할 수 있다.
+- ② 최상위 노드인 아시아지부(100)을 시작으로 하위의 모든 부서를 추출(순방향 전개)하므로 아래와 같은 결과가 출력된다.
+    
+    
+    | 부서코드 | 부서명 | 상위부서코드 | 매출액 | LVL |
+    | --- | --- | --- | --- | --- |
+    | 100 | 아시아지부 | 〈NULL〉 | 〈NULL〉 | 1 |
+    | 110 | 한국지사 | 100 | 〈NULL〉 | 2 |
+    | 111 | 서울지점 | 110 | 1000 | 3 |
+    | 112 | 부산지점 | 110 | 2000 | 3 |
+    | 120 | 일본지사 | 100 | 〈NULL〉 | 2 |
+    | 121 | 도쿄지점 | 120 | 1500 | 3 |
+    | 122 | 오사카지점 | 120 | 1000 | 3 |
+    | 130 | 중국지사 | 100 | 〈NULL〉 | 2 |
+    | 131 | 베이징지점 | 130 | 1500 | 3 |
+    | 132 | 상하이지점 | 130 | 2000 | 3 |
+- ③ 최하위 노드인 도쿄 지점(121)에서 상위의 모든 노드(역방향 전개)를 추출하게 되므로 아래와 같은 결과가 출력된다.
+    
+    
+    | 부서코드 | 부서명 | 상위부서코드 | 매출액 | LVL |
+    | --- | --- | --- | --- | --- |
+    | 100 | 아시아지부 | 〈NULL〉 | 〈NULL〉 | 3 |
+    | 120 | 일본지사 | 100 | 〈NULL〉 | 2 |
+    | 121 | 도쿄지점 | 120 | 1500 | 1 |
+- ④ WHERE 절 서브쿼리를 일본지사(120)을 시작으로 역방향 전개하여 최상위 노드를 추출하여 다시 순방향 전개를 수행하고 있다. 이렇게 되면 ②와 동일한결과가 출력된다.
+
+---
+
+Q. 아래의 SQL과 실행 결과가 다른 하나는?
+
+> ③
+> 
+
+```sql
+[테이블 생성]
+CREATE TABLE T1 (NO NUMBER, COLA VARCHAR2(10));
+
+INSERT INTO TI VALUES (1, 'AAA');
+
+CREATE TABLE T2 (NO NUMBER, COLB VARCHAR2(10));
+
+INSERT INTO T2 VALUES (1, 'BBB');
+INSERT INTO T2 VALUES (3, 'CCC');
+
+COMMIT;
+
+[SQL]
+SELECT A.NO, A.COLA, B.COLB 
+FROM T1 A, T2 B
+WHERE B.NO = A.NO;
+
+```
+
+```sql
+
+① 
+SELECT A.NO, A.COLA, B.COLB 
+FROM T1 A 
+INNER JOIN T2 B
+ON B.NO = A.NO;
+
+②
+SELECT NO, A.COLA, B. COLB 
+FROM T1 A 
+JOIN T2 B USING (NO);
+
+③
+SELECT A.NO, A.COLA, B.COLB 
+FROM T1 A 
+CROSS JOIN T2 B;
+
+④
+SELECT NO, A.COLA, B.COLB 
+FROM T1 A 
+NATURAL JOIN T2 B;
+```
+
+- 주어진 SQL 및 ①, ②, ④ SQL의 경우, 각 테이블의 NO칼럼 값이 같은 행만 조인에 성공하여 1건의 결과가 나오지만, ③ SQL의 경우 M*N 건의 결과가 나오게 되므로 2건이 된다.
+
+---
+
+Q. WINDOW FUNCTION을 사용하지 않고 아래의 실행 결과를 출력하는 SOL로 가장 적절한 것은?
+
+> ③
+> 
+
+[일자별매출]
+
+| 일자 | 매출액 |
+| --- | --- |
+| 2015.11.01 | 1000 |
+| 2015.11.02 | 1000 |
+| 2015.11.03 | 1000 |
+| 2015.11.04 | 1000 |
+| 2015.11.05 | 1000 |
+| 2015.11.06 | 1000 |
+| 2015.11.07 | 1000 |
+| 2015.11.08 | 1000 |
+| 2015.11.09 | 1000 |
+| 2015.11.10 | 1000 |
+
+[실행 결과]
+
+| 일자 | 누적매출액 |
+| --- | --- |
+| 2015.11.01 | 1000 |
+| 2015.11.02 | 2000 |
+| 2015.11.03 | 3000 |
+| 2015.11.04 | 4000 |
+| 2015.11.05 | 5000 |
+| 2015.11.06 | 6000 |
+| 2015.11.07 | 7000 |
+| 2015.11.08 | 8000 |
+| 2015.11.09 | 9000 |
+| 2015.11.10 | 10000 |
+
+```sql
+① 
+SELECT A.일자, SUM(A.매출액) AS 누적매출액 
+FROM 일자별매출 A 
+GROUP BY A.일자 
+ORDER BY A.일자;
+
+② 
+SELECT B.일자, SUM(B.매출액) AS 누적매출액
+FROM 일자별매출 A 
+JOIN 일자별매출 B 
+ON (A.일자 >= B.일자)
+GROUP BY B.일자 
+ORDER BY B.일자;
+
+③ 
+SELECT A.일자, SUM(B.매출액) AS 누적매출액
+FROM 일자별매출 A 
+JOIN 일자별매출 B 
+ON (A.일자 >= B.일자)
+GROUP BY A.일자 
+ORDER BY A.일자;
+
+④
+SELECT A.일자, (
+							SELECT SUM(B.매출액)
+							FROM 일자별매출 B
+							WHERE B.일자 >= A.일자
+							) AS 누적매출액
+FROM 일자별매출 A 
+GROUP BY A.일자 
+ORDER BY A.일자;
+```
+
+- ①은 일자별매출액에 일자별 매출 테이블과 동일하게 출력된다.
+- ②, ④는 작은 날짜쪽에 제일 큰 누적금액이 출력된다.(부등호 반대)
+- ③은 일자별매출 테이블을 SELF JOIN하여, A Alias 쪽에 먼저 읽혔다고 가정하면 다음처럼 데이터가 생성될 것이다.
+    - A가 {2015.11.01., 1000} 일 때 B는 {2015.11.01. 1000}
+    - A가 {2015.11.02., 1000} 일 때 B는 {{2015.11.01. 1000}, {2015.11.02. 1000}}
+    - A가 {2015.11.03., 1000} 일 때 B는 {{2015.11.01. 1000}, {2015.11.02. 1000}, {2015.11.03. 1000}}
+- 위의 SELF JOIN은 EQUI JOIN이 아닌 RANGE JOIN이므로 A의 레코드는 B의 레코드 수만큼 증가한다.(A*B) 그러므로 위의 ③번의 경우 A는 B의 레코드 개수와 동일하게 되므로 SUM(매출금액)을 하면 3000이 된다. 이런식으로 A Alias의 모든 레코드 개수를 Scan하면 누적 값을 출력하게 된다.
+- SELF JOIN(셀프 조인)이란 동일 테이블 사이의 조인을 말한다. 따라서 FROM 절에 동일 테이블이 두 번 이상 나타난다. 동일 테이블 사이의 조인을 수행하면 테이블과 칼럼 이름 모두 동일하기 때문에 식별을 위해 반드시 테이블 별칭(Alias)를 사용해야 한다.
+    
+    ```sql
+    SELECT ALIAS명1.칼럼명, ALIAS명2.칼럼명, ...
+    FROM 테이블 ALIAS명1, 테이블 ALIAS명2
+    WHERE ALIAS명1.칼럼명2 = ALIAS명2.칼럼명1;
+    ```
+    
+
+---
+
+Q. 아래 SQL의 실행 결과로 가장 적절한 것은?
+
+> ③
+> 
+
+[EMP]
+
+| A | B | C | D |
+| --- | --- | --- | --- |
+| 1 | a | 1 | x |
+| 2 | a | 1 | x |
+| 3 | b | 2 | У |
+
+[DEPT]
+
+| D | E | F |
+| --- | --- | --- |
+| x | i | 5 |
+| y | m | 6 |
+
+```sql
+SELECT COUNT(DISTINCT A||B)
+FROM EMP
+WHERE D = (SELECT D FROM DEPT WHERE E = 'i');
+```
+
+① 0
+
+② 1
+
+③ 2
+
+④ 3
+
+- WHERE 절의 단일행 서브쿼리인 (SELECT D FROM DEPT WHERE E = 'i')에 의해서 DEPT 테이블의 D 칼럼 값이 x인 행이 선택되고, D = (SELECT D FROM DEPT WHERE E = 'i') 조건에 의해 EMP 테이블의 (A=1, B=a), (A=2, B=a)인 2건이 출력된다. 출력된 결과가 모두 UNIQUE하기 때문에 DISTINCT 연산자는 결과 건수에 영향을 주지 않는다.
+
+- 메인쿼리와 서브쿼리
+    
+    ![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/3e2d8e2b-4ab3-463b-b14f-cbdd834a0993/f9203d7d-db80-44c9-9dd1-c3027fd6404e/Untitled.png)
+    
+- 반환되는 데이터의 형태에 따른 서브쿼리 분류
+    - Single Row 서브쿼리(단일 행 서브쿼리)
+        - 서브쿼리의 실행 결과가 **항상 1건 이하**인 서브쿼리를 의미한다.
+        - 단일 행 서브쿼리는 단일 행 비교 연산자와 함께 사용된다.
+        - 단일 행 비교 연산자에는 `=`, `<`, `>`, `>=`, `<=`, `<>`이 있다.
+    - Multi Row 서브쿼리(다중 행 서브쿼리)
+        - 서브쿼리의 실행 결과가 **여러 건**인 서브쿼리를 의미한다.
+        - 다중행 서브쿼리는 다중 행 비교 연산자와 함께 사용된다.
+        - 다중 행 비교 연산자에는 IN, ALL, ANY, SOME, EXISTS가 있다.
+    - Multi Column 서브쿼리(다중 칼럼 서브쿼리)
+        - 서브쿼리의 실행 결과로 **여러 칼럼**을 반환한다.
+        - 메인쿼리의 조건절에 여러 칼럼을 **동시에 비교**할 수 있다.
+        - 서브쿼리와 메인쿼리에서 비교하고자 하는 **칼럼 개수와 칼럼 위치가 동일**해야 한다.
+
+---
+
+Q. 아래에서 서브쿼리에 대한 설명으로 적절한 것을 모두 고른 것은?
+
+> (가), (나), (라)
+> 
+
+(가) 서브쿼리는 단일 행(Single Row) 또는 복수 행(Multi Row) 비교 연산자와 함께 사용할 수 있다.
+
+(나) 서브쿼리는 SELECT 절, FROM 절, HAVING 절, ORDER BY 절 등에서 사용이 가능하다.
+
+(다) 서브쿼리의 결과가 복수 행(Multi Row) 결과를 반환하는 경우에는 '=’, ‘<=’, '=>' 등의 연산자와 함께 사용할 수 있다.
+(라) 연관(Correlated) 서브쿼리는 서브쿼리가 메인쿼리 칼럼을 포함하고 있는 형태의 서브쿼리이다.
+
+(마) 다중 칼럼 서브쿼리는 서브쿼리의 결과로 여러 개의 칼럼이 반환되어 메인쿼리의 조건과 동시에 비교되는 것을 의미하며 오라클 및 SQL Server 등의 DBMS에서 사용할 수 있다.
+
+- (다) 서브쿼리의 결과가 복수 행 결과를 반환하는 경우에는 IN, ALL, ANY 등의 복수 행 비교 연산자와 사용하여야 한다.
+- (마) 다중 칼럼 서브쿼리는 서브쿼리의 결과로 여러 개의 칼럼이 반환되어 메인 쿼리의 조건과 비교되는데, SQL Server에서는 현재 지원하지 않는 기능이다.
+
+---
+
+**Q. 아래 실행 결과를 출력하는 SQL로 가장 적절한 것은?**
+
+> ④
+> 
+
+[TBL]
+
+| KEY | GRP | VAL1 | VAL2 |
+| --- | --- | --- | --- |
+| 1 | A | 10 | 100 |
+| 2 | A | 10 | 200 |
+| 3 | A | 10 | 300 |
+| 4 | A | 20 | 400 |
+| 5 | A | 50 | 500 |
+| 6 | B | 40 | 600 |
+| 7 | B | 10 | 700 |
+| 8 | B | 20 | 800 |
+| 9 | B | 20 | 900 |
+| 10 | B | 10 | 1000 |
+
+[실행 결과]
+
+| KEY | VAL1 | VAL2 |
+| --- | --- | --- |
+| 1 | 0.1 | 1 |
+| 2 | 0.1 | 1 |
+| 3 | 0.1 | 2 |
+| 4 | 0.2 | 2 |
+| 5 | 0.5 | 3 |
+| 6 | 0.4 | 3 |
+| 7 | 0.1 | 4 |
+| 8 | 0.2 | 4 |
+| 9 | 0.2 | 5 |
+| 10 | 0.1 | 5 |
+
+```sql
+①
+SELECT KEY, 
+			PERCENT_RANK() OVER(PARTITION BY GRP ORDER BY VAL1) AS VAL1, 
+			DENSE_ RANK() OVER(ORDER BY VAL2) AS VAL2 
+FROM TBL 
+ORDER BY KEY;
+
+② 
+SELECT KEY, 
+			CUME_DIST() OVER(ORDER BY VAL1) AS VAL1, 
+			RANK() OVER(ORDER BY VAL2) AS VAL2
+FROM TBL
+ORDER BY KEY;
+
+③
+SELECT KEY, 
+			PERCENT_RANK() OVER(PARTITION BY GRP ORDER BY VAL1) AS VAL1,
+			RANK() OVER(ORDER BY VAL2) AS VAL2 
+FROM TBL 
+ORDER BY KEY;
+
+④
+SELECT KEY, 
+			RATIO_TO_REPORT(VAL1) OVER(PARTITION BY GRP) AS VAL1,
+			NTILES(5) OVER(ORDER BY VAL2) AS VAL2 
+FROM TBL 
+ORDER BY KEY;
+```
+
+- 문제의 결과를 보면 VAL1은 데이터의 VAL1 값을 GRP별로 합계를 내고 비율을 구한 값임을 알 수 있고, VAL2은 전체 TBL 데이터의 VAL2값으로 N등분한 값임을 알 수 있다. 그러므로 RATIO_TO_REPORT, NTILE 함수를 사용한 SQL이 정답이다.
+- **PERCENT_RANK**는 파티션별 윈도우에서 제일 먼저 나오는 것을 0으로, 제일 늦게 나오는 것을 1로 하여, 값이 아닌 **행의 순서별 백분율**을 구하는 함수이다.
+- DENSE_RANK는 순위를 구하는 함수로 동일한 순위를 하나의 등수로 취급한다.
+- CUME_DIST는 파티션별 윈도우의 전체건수에서 현재 행보다 작거나 같은 건수에 대한 누적 백분율을 구하는 함수이다.
+- RANK는 파티션 내의 ORDER BY에 의한 순위를 구하는 함수로, 동일한 순위에 대해서는 동일한 순위를 부여한다.
+- RATIO_TO_REPORT는 파티션 내에 주어진 칼럼 값의 합계에 대한 행별 백분율을 소수점으로 구하는 함수이다.
+    
+    ```sql
+    RATIO_TO_REPORT(VAL1) OVER(PARTITION BY GRP) AS VAL1
+    ```
+    
+    - PARTITION BY GRP로 GRP 컬럼의 값으로 두 그룹으로 나누고, VAL1 값의 합에 대한 비율을 구한다.
+- NTILE는 파티션별 전체 건수를 주어진 인자로 N 등분한 결과를 반환한다.
+    - 행 데이터를 그룹별로 나누어 차례대로 행 번호를 부여하는 분석 함수
+    
+    ```sql
+    SELECT NTILE([그룹으로 나눌 정수]) OVER (PARTITION BY [컬럼1] ORDER BY [컬럼2])
+    ```
+    
+    - 전체 행 데이터 수를 그룹으로 나누었을 때 나머지가 존재하면 첫 번째 그룹부터 나머지가 안 남을 때까지 1씩 부여한다.
+    - Ex, 전체 행이 12개이고 그룹이 5일 때, 5를 나눈 나머지가 2이므로 1~5번 그룹에 2행을 부여하고 1, 2번 그룹에 1행씩 추가 부여한다.
+    - PARTITION BY를 생략하면 전체 행에 대해서 그룹화가 수행된다. 반대로 PARTITION BY를 지정하면 해당 파티션 내에서 그룹화를 진행하여 행 번호를 부여한다.
+    
+    ![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/3e2d8e2b-4ab3-463b-b14f-cbdd834a0993/10cb8912-f9f7-465b-a584-3dbdc7aef40d/478f38f8-eb7f-468b-9e8b-af5d5da180c7.png)
+    
+    ![스크린샷 2024-05-17 오후 6.11.57.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/3e2d8e2b-4ab3-463b-b14f-cbdd834a0993/1c7e0174-a0c8-4910-83cc-fbdd37785947/7ee5dac4-3538-410a-99ce-e2d6f2ad2a27.png)
+    
+
+---
+
+**Q. 아래 SQL과 동일한 결과를 출력하는 SQL로 가장 적절하지 않은 것은?**
+
+> ③
+> 
+
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/3e2d8e2b-4ab3-463b-b14f-cbdd834a0993/44aa6fc4-1b76-4da5-b4c8-b34c2da1d43b/Untitled.png)
+
+```sql
+SELECT A.회원번호, A.회원명
+FROM 회원 A, 동의항목 B 
+WHERE A.회원번호 = B.회원번호 
+GROUP BY A.회원번호, A.회원명
+HAVING COUNT(
+						CASE 
+							WHEN B.동의여부 = 'N' THEN 0 
+							ELSE NULL 
+						END) >= 1
+ORDER BY A.회원번호;
+```
+
+```sql
+①
+SELECT A.회원번호, A.회원명
+FROM 회원 A
+WHERE EXISTS (
+							SELECT 1
+							FROM 동의항목 B 
+							WHERE A.회원번호 = B.회원번호
+							AND B.동의여부 ='N'
+							)
+ORDER BY A.회원번호;
+
+②
+SELECT A.회원번호, A.회원명
+FROM 회원 A
+WHERE A.회원번호 IN (
+									SELECT B.회원번호
+									FROM 동의항목 B
+									WHERE B.동의여부 ='N'
+									)
+ORDER BY A.회원번호;
+
+③ 
+SELECT A.회원번호, A.회원명
+FROM 회원 A
+WHERE 0 < (
+					SELECT COUNT(*)
+					FROM 동의항목 B 
+					WHERE B.동의여부 ='N'
+					)
+ORDER BY A.회원번호;
+
+④
+SELECT A.회원번호, A.회원명 
+FROM 회원 A, 동의항목 B
+WHERE A.회원번호 = B.회원번호 AND B.동의여부 ='N' 
+GROUP BY A.회원번호, A.회원명 
+ORDER BY A.회원번호;
+```
+
+- 원본 테이블에 대한 조건은 WHERE 절에, 집계 결과에 대한 조건은 HAVING 절에 준다. SQL에서는 회원별로 그룹핑 하고 있다. 회원별로 동의하지 않은 항목이 있으면 카운트가 나올 것이며, 카운트가 나오면 참이 되어 해당 회원을 출력한다. 즉, 동의하지 않은 항목을 가진 회원을 출력하는 쿼리이다.
+- SQL) 동의하지 않은 건이 있는 회원
+    - ① 동의하지 않은 건이 있는 회원
+    - ② 동의하지 않은 회원에 해당하는 회원
+    - ③ 동의하지 않은 카운트(회원별 카운트가 아닌 전체 카운트)가 있으면 전체 회원 출력
+    - ④ 동의하지 않은 회원만 조인
+- 여러 사람 중 한 사람이라도 동의하지 않은 사람이 있다면 ③번 보기의 서브쿼리는 1 이상의 값이 나올 것이고, 1은 0보다 크므로 항상 참이 되므로 모든 회원이 출력된다. 회원별로 동의 여부를 체크해야 하는데 ③번 보기는 회원별 체크가 아니다. 올바른 서브쿼리는 다음과 같다.
+    
+    ```sql
+    SELECT COUNT(*)
+    FROM 동의여부 B
+    WHERE A.회원번호 = B.회원번호 AND B.동의여부 = 'N'
+    ```
+    
+
+- 위의 SQL은 **약관항목 중** 단 하나라도 동의를 하지 않은 회원을 구하는 SQL이다. HAVING 절에서 **동의여부가 N인 데이터가 한 건이라도 존재하는 데이터**를 추출한다.
+- ①은 회원 테이블과 동의항목 테이블의 회원번호 칼럼으로 **연관 서브쿼리**를 수행하여 **동의여부 칼럼의 값이 N인 데이터가 한 건**이라도 존재하면 **회원 데이터를 출력**하게 된다.
+- ②는 동의항복 테이블에서 동의여부가 N인 한 건이라도 존재하는 **회원을 추출**하여 회원테이블과 IN 연산을 수행한다.
+- ③의 회원 테이블과 동의항목 **테이블 간에 회원번호 칼럼이 연관 서브쿼리로 처리**되어야 정상적으로 처리할 수 있다.
+- ④는 HAVING절로 처리되던 조건을 **WHERE절에 위치**시켜 더 간편하게 Join으로 처리하였다. 또한 회원과 동의항목은 1:N 관계이므로 JOIN된 결과는 N건 발생됨에 따라 **GROUP BY를 추가하여 중복을 제거**하였다.
+
+- 서브쿼리를 사용할 때 주의사항
+    - 서브쿼리를 괄호로 감싸서 사용한다.
+    - 서브쿼리는 단일행(Single Row) 또는 복수행(Multiple Row) 비교 연산자와 함께 사용 가능하다. 단일 행 비교 연산자는 서비쿼리의 결과가 반드시 1건 이하이어야 하고 복수 행 비교 연산자는 서비쿼리의 결과 건수와 상관없다.
+    - 서브쿼리에서는 ORDER BY를 사용하지 못한다. ORDER BY절은 메인쿼리의 마지막 문장에 위치해야 한다.
+
+---
+
+Q. 아래 SQL에 대한 설명으로 가장 적절한 것은?
+
+> 
+> 
+
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/3e2d8e2b-4ab3-463b-b14f-cbdd834a0993/faaa6c28-302e-4da5-8ad2-0b158fa41a95/Untitled.png)
+
+```sql
+	[SQL]
+	SELECT A.회원ID, A.회원명, A.이메일
+	FROM 회원 A
+㉠ WHERE EXISTS (
+							SELECT 'X'
+							FROM 이벤트 B, 메일발송 C
+							WHERE B.시작일자 >= '2014.10.01'
+							AND B.이벤트ID = C.이벤트ID
+						㉡ AND A.회원ID = C.회원ID
+						㉢	HAVING COUNT(*) < (
+																SELECT COUNT(*)
+																FROM 이벤트
+																WHERE 시작일자 >= '2014.10.01')
+							);
+```
+
+① 이벤트 시작일자가 ‘2014.10.01'과 같거나 큰 이벤트를 대상으로 이 메일이 발송된 기록이 있는 모든 회원을 추출하는 SQL이다.
+
+② ㉡을 제거하고 의 EXISTS 연산자를 IN 연산자로 변경해도 결과는 동일하다.
+
+③ ㉢은 이벤트 시작일자가 ‘2014.10.01' 같거나 큰 이벤트건수와 그 이벤트들을 기준으로 회원별 이메일 발송건수를 비교하는 것이다.
+
+④ GROUP BY 및 집계 함수를 사용하지 않고 HAVING절을 사용하였으므로 SQL이 실행되지 못하고 오류가 발생한다.
+
+---
+
+Q. 서브쿼리에 대한 설명으로 가장 적절한 것은?
+
+> ②
+> 
+
+① 단일 행 서브쿼리는 서브쿼리의 실행 결과가 항상 한 건 이하인 서브쿼리로 IN, ALL 등의 비교 연산자를 사용하여야 한다.
+
+② 다중 행 서브쿼리 비교 연산자는 단일 행 서브쿼리의 비교 연산자로도 사용할 수 있다.
+
+③ 연관 서브쿼리는 주로 메인쿼리에 값을 제공하기 위한 목적으로 사용 한다.
+
+④ 서브 쿼리는 항상 메인쿼리에서 읽힌 데이터에 대해 서브쿼리에서 해당 조건이 만족하는지를 확인하는 방식으로 수행된다.
+
+- ① 단일 행 서브쿼리 비교 연산자로는 =, <, <=, >, >=, <>가 되어야 한다. IN, ALL 등의 비교 연산자는 다중 행 서브쿼리의 비교연산자이다.
+- ② 단일 행 서브쿼리의 비교 연산자는 다중 행 서브쿼리의 비교 연산자로 사용할 수 없지만, 반대의 경우는 가능하다.
+- ③ 비 연관 서브쿼리가 주로 메인쿼리에 값을 제공하기 위한 목적으로 사용된다.
+- ④ 메인쿼리의 결과가 서브쿼리로 제공될 수도 있고, 서브쿼리의 결과가 메인쿼리로 제공될 수도 있으므로 실행 순서는 상황에 따라 달라진다.
+
+---
+
+**Q. 아래 SQL에 대한 설명으로 가장 적절하지 않은 것은?**
+
+> ③
+> 
+
+```sql
+SELECT B.사원번호, B.사원명, A.부서번호, A.부서명, 
+			(
+			SELECT COUNT(*)
+			FROM 부양가족 Y
+			WHERE Y.사원번호 = B.사원번호
+			) AS 부양가족수
+FROM 부서 A, (
+						SELECT *
+						FROM 사원
+						WHERE 입사년도 ='2014'
+						) B
+WHERE A.부서번호 = B.부서번호
+AND EXISTS ( 
+						SELECT 1
+						FROM 사원 X
+						WHERE X.부서번호 = A.부서번호);
+```
+
+① 위 SQL에는 다중 행 연관 서브쿼리, 단일 행 연관 서브쿼리, 인라인 뷰(Inline View)가 사용되었다.
+
+② SELECT 절에 사용된 서브쿼리는 스칼라 서브쿼리라고도 하며, 이러한 형태의 서브쿼리는 JOIN으로 동일한 결과를 추출할 수도 있다.
+
+③ WHERE 절의 서브쿼리에 사원 테이블 검색 조건으로 입사년도 조건을 FROM 절의 서브쿼리와 동일하게 추가해야 원하는 결과를 추출할 수 있다.
+
+④ FROM 절의 서브쿼리는 동적 뷰(Dynamic View)라고도 하며, SQL 문장 중 테이블 명이 올 수 있는 곳에서 사용할 수 있다.
+
+- 2014년에 입사한 사원들의 사원, 부서 정보와 부양가족수를 추출하는 SQL이다.
+- SELECT 절에 사용된 서브쿼리는 단일행 연관 서브쿼리로 JOIN으로도 변경이 가능하며, FROM 절에 사용된 서브쿼리는 Inline View 또는 Dynamic View이고, WHERE 절에 사용된 서브쿼리는 다중행 연관 서브쿼리이다.
+- ③번 보기의 경우 이미 FROM 절에 Inline View로 사원 테이블의 입사년도 조건을 명시하였으므로 WHERE 절의 EXISTS 조건은 부서와 사원 테이블 간의 JOIN 조건에 의한 결과에 어떠한 영향도 미치지 못하므로 삭제되어도 무방하다.
+- 단일행인지 다중행인지를 결정하는 것은 SELECT 절이 아닌 WHERE 절이다. WHERE 절 조건을 만족하는 행이 1건인가? 여러 건인가? 물론, SELECT 절에 집계함수를 사용한다면 사용된 서브쿼리는 집계함수 사용으로 단일행이 된다.
+
+---
+
+Q. 아래를 참고할 때 평가대상상품에 대한 품질평가항목별 최종 평가결과를 출력하는 SQL로 가장 적절한 것은? (단, 평가항목에 대한 평가등급이 기대수준에 미치지 못할 경우 해당 평가항목에 대해서만 재평가를 수행 한다.)
+
+> 
+> 
+
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/3e2d8e2b-4ab3-463b-b14f-cbdd834a0993/de3e22dd-e8a0-4577-9313-d0605472237f/Untitled.png)
+
+```sql
+SELECT B.상품ID, B.상품명, C.평가항목ID, C.평가항목명, A. 평가
+회차, A. 평가등급, A.평가일자
+FROM
+평가결과 A, 평가대상상품 B, 품질평가항목 C, (SELECT MAX(평가회차) AS 평가회차 FROM 평가결과) D
+WHERE A.상품ID = B.상품ID
+AND
+A.평가항목ID = C. 평가항목ID
+AND
+A.평가회차 = D.평가회차;
+② SBLECT B.상품ID, B.상품명, C.평가항목ID, C.평가항목명, A.평가
+회차, A.평가등급, A.평가일자
+FROM
+평가결과 A, 평가대상상품 B, 품질평가항목 C
+WHERE A.상품ID = B.상품ID
+AND
+A. 평가항목ID = C.평가항목ID
+AND
+A. 평가회차 = (SELECT MAX(X.평가회차)
+FROM 평가결과 X WHERE X.상품ID = B.상품ID AND X.평가항목ID = C.평가항목ID);
+③ SELECT B.상품ID, B.상품명, C.평가항목ID, C.평가항목명 , MAX(A.평가회차) AS 평가회차
+,MAX(A. 평가등급) AS 평가등급 MAX(A. 평가일자) AS 평가일자
+FROM
+평가결과 A, 평가대상상품 B, 품질평가항목 C
+WHERE A.상품ID = B.상품ID AND A.평가항목ID =C.평가항목ID CROUP BY B.상품ID, B.상품명, C.평가항목ID, C.평가항복명:
+
+④ SELECT B.상품ID, B,상품명, C.평가항목ID, C.평가항목명, A.평가
+회차, A. 평가등급, A.평가일자
+FROM
+(SELECT 상품ID, 평가항목ID
+,MAX(평가회차) AS 평가회차
+,MAX(평가등급) AS 평가등급 , MAX(평가일자) AS 평가일자
+FROM
+평가결과
+GROUP BY 상품ID, 평가항목ID) A, 평가대상상품 B,
+품질평가항목 C
+WHERE A.상품ID = B.상품ID AND
+A.평가항목ID = C.평가항목ID;
+)
+
+```
+
+- 인라인 뷰(Inline View)
+    - FROM 절에서 사용되는 서브쿼리를 인라인 뷰(Inline View)라고 한다.
+    - 서브쿼리의 결과가 마치 실행 시에 동적으로 생성된 테이블인 것처럼 사용할 수 있다.
+    - 인라인 뷰는 SQL문이 실행될 때만 암시적으로 생성되는 동적인 뷰이기 때문에 데이터베이스에 해당 정보가 저장되지 않는다.
+
+---
+
+**Q. 뷰에 대한 설명으로 가장 적절하지 않은 것은?**
+
+> ②
+> 
+
+① 뷰는 단지 정의만을 가지고 있으며, 실행 시점에 질의를 재작성하여 수행한다.
+
+② 뷰는 복잡한 SQL 문장을 단순화하는 장점이 있는 반면, 테이블 구조가 변경되면 응용 프로그램을 변경해 주어야 한다.
+
+③ 뷰는 보안을 강화하기 위한 목적으로도 활용할 수 있다.
+
+④ 실제 데이터를 저장하고 있는 뷰를 생성하는 기능을 지원하는 DBMS도 있다.
+
+- 뷰의 장점 중 독립성은 테이블 구조가 변경되어도 뷰를 사용하는 응용 프로그램은 변경하지 않아도 된다.
+- 뷰 사용의 장점
+    - 독립성: 테이블 구조가 변경되어도 뷰를 사용하는 응용 프로그램은 변경하지 않아도 된다.
+    - 편리성: 복잡한 질의를 뷰로 생성하여 관련 질의를 단순하게 작성할 수 있다. 또한 해당 형태의 SQL을 자주 사용할 때 뷰를 이용하면 편리하게 사용할 수 있다.
+    - 보안성: 직원의 급여정보와 같이 숨기고 싶은 정보가 존재한다면, 뷰를 생성할 때 해당 칼럼을 빼고 생성하여 사용자에게 정보를 감출 수 있다.
+
+---
+
+Q. 아래에서 뷰 생성 스크립트를 실행한 후, SQL을 실행한 결과로 가장 적절한 것은?
+
+> ② 200
+> 
+
+[TBL]
+
+| C1 | C2 |
+| --- | --- |
+| A | 100 |
+| B | 200 |
+| B | 100 |
+| B | <NULL> |
+| <NULL> | 200 |
+
+```sql
+[뷰 생성 스크립트]
+CREATE VIEW V_TBL
+AS
+SELECT * 
+FROM TBL
+WHERE C1 = 'B' OR C1 IS NULL
+
+[SQL]
+SELECT SUM(C2) C2
+FROM V_TBL
+WHERE C2 >= 200 AND C1 = 'B'
+```
+
+- 조회 SQL 실행 시 V_TBL은 뷰 스크립트로 치환되어 수행된다. 뷰 생성 스크립트에서 부여된 조건과 조회 SQL에서 부여된 조건 모두를 만족해야 한다.
+
+---
+
+**Q. 아래 SQL의 실행 결과로 가장 적절한 것은?**
+
+| 사원ID | COL2 | COL3 |
+| --- | --- | --- |
+| 001 | 2500 | 2500 |
+| 004 | 7500 | 3000 |
+| 007 | 7500 | 3000 |
+
+[사원]
+
+| 사원ID | 부서ID | 연봉 |
+| --- | --- | --- |
+| 001 | 100 | 2500 |
+| 002 | 100 | 3000 |
+| 003 | 200 | 4500 |
+| 004 | 200 | 3000 |
+| 005 | 200 | 2500 |
+| 006 | 300 | 4500 |
+| 007 | 300 | 3000 |
+
+```sql
+[SQL]
+SELECT 사원ID, COL2, COL3 
+FROM (
+			SELECT 사원ID,
+			ROW_NUMBER() OVER(PARTITION BY 부서ID ORDER BY 연봉 DESC) AS COL1,
+			SUM(연봉) OVER(PARTITION BY 부서ID ORDER BY 사원ID ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS COL2,
+			MAX(연봉) OVER(ORDER BY 연봉 DESC ROWS CURRENT ROW) AS COL3
+			FROM 사원
+			)
+WHERE COL1 = 2
+ORDER BY 1;
+```
+
+- COL1 구문은 부서ID별로 **연봉의 내림차순**으로 유일한 **순위**를 부여한다.
+    - 부서ID별 연봉 순위(연봉 내림차순)
+    
+    | 사원ID | 부서ID | 연봉 | COL1 |  |
+    | --- | --- | --- | --- | --- |
+    | 002 | 100 | 3000 | 1 |  |
+    | 001 | 100 | 2500 | 2 | ⭐️ |
+    | 003 | 200 | 4500 | 1 |  |
+    | 004 | 200 | 3000 | 2 | ⭐️ |
+    | 005 | 200 | 2500 | 3 |  |
+    | 006 | 300 | 4500 | 1 |  |
+    | 007 | 300 | 3000 | 2 | ⭐️ |
+- COL2 구문은 부서ID별로 첫 행부터 현재 행까지의 범위에서 SUM값을 구한다.
+    - 부서ID별 연봉의 합을 구함(사원ID 오름차순, 그룹별 첫 번째 행부터 현재 행까지)
+    
+    | 사원ID | 부서ID | 연봉 | COL2 |  |
+    | --- | --- | --- | --- | --- |
+    | 001 | 100 | 2500 | 2500 | ⭐️ |
+    | 002 | 100 | 3000 | 5500 |  |
+    | 003 | 200 | 4500 | 4500 |  |
+    | 004 | 200 | 3000 | 7500 | ⭐️ |
+    | 005 | 200 | 2500 | 10000 |  |
+    | 006 | 300 | 4500 | 4500 |  |
+    | 007 | 300 | 3000 | 7500 | ⭐️ |
+- COL3 구문은 전체 데이터에서 현재 행부터 현재 행 까지의 범위에서 가장 큰 연봉을 구한다.
+    - ROWS CURRENT ROW에서 BETWEEN이 없다면 뒤에 AND CURRENT ROW가 생략된 것과 동일하다. 즉, COL3 구문은 ROWS [BETWEEN] CURRENT ROW [AND CURRENT ROW]와 동일하다.
+    - 연봉 내림차순하여 현재 행부터 현재 행 까지 높은 연봉을 출력하게 되면 각 행마다 본인 연봉이 나오게 된다. 전체에서 최대 연봉 값이지만 현재 행은 1행 뿐이므로 MAX 값은 의미가 없으며 자기 자신의 값이 출력된다.
+- WHERE COL1 = 2
+    - COL1의 결과가 2인 행만 본다.(⭐️)
+- COL별로 정렬 기준이 다르며, 독립적인 것만 주의하면 된다.
+    
+    ![1715950024.402916.JPEG](https://prod-files-secure.s3.us-west-2.amazonaws.com/3e2d8e2b-4ab3-463b-b14f-cbdd834a0993/27ea6a01-6e1b-4fdf-b908-925ff9394b6c/1715950024.402916.jpeg)
+    
+
+- 윈도우함수
+    - rows between and 값이 증가한다.
+        - rows between UNBOUNDED PRECEDING and CURRENT ROW) as “직업별 합계”
+        - rows between 1 PRECEDING and 1 FOLLOWING) as “위아래 합계”
+    - range between and 값이 동일하다.
+        1. UNBOUNDED PRECEDING : 최종 출력될 값의 맨 처음 row의 값(Partition by 고려)
+        2. CURRENT ROW : 현재 row의 값
+        3. UNBOUNDED FOLLOWING : 최종 출력될 값의 맨 마지막(Partition by 고려)
+
+- 윈도 함수의 기본 문법은 다음과 같다.
+    
+    ```sql
+      SELECT 함수명(파라미터) OVER 
+      ([PARTITION BY 컬럼1, ...] [ORDER BY 컬럼 A, ...]) 
+      FROM 테이블명
+    ```
+    
+    - PARTITION BY는 선택 항목이며, 순위를 정할 대상 범위의 컬럼을 설정
+    - PARTITION BY 구에는 GROUP BY절이 가진 집약 기능이 없으며, 이로 인해 레코드가 줄어들지 않음
+    - PARTITION BY를 통해 구분된 레코드 집합을 윈도라고 함
+    - 윈도 함수에는 OVER 문구가 필수적으로 포함
+    - ORDER BY 뒤에는 SORT 컬럼을 입력(어떤 열을 어떤 순서로 순위를 정할지를 지정)
+
+---
+
+**Q. 아래 실행 결과를 출력하는 SQL로 가장 적절한 것은?**
+
+> ②
+> 
+
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/3e2d8e2b-4ab3-463b-b14f-cbdd834a0993/cac32789-4847-438f-9fe9-152a839550be/Untitled.png)
+
+[실행 결과]
+
+| 지역명 | 이용월 | 이용량 |
+| --- | --- | --- |
+| 서울 | 2014.01 | 1000 |
+| 서울 | 2014.02 | 1000 |
+| 서울 | 월별합계 | 2000 |
+| 경기 | 2014.01 | 1000 |
+| 경기 | 2014.03 | 2000 |
+| 경기 | 월별합계 | 3000 |
+| 대전 | 2014.05 | 1500 |
+| 대전 | 2014.06 | 1000 |
+| 대전 | 월별합계 | 2500 |
+| 지역전체 | 월별합계 | 7500 |
+
+```sql
+①
+SELECT (
+				CASE GROUPING(B.지역명) 
+					WHEN O THEN '지역전체'
+					ELSE B.지역명 
+				END
+				) AS 지역명,
+				(
+				CASE GROUPING(TO_CHAR(A.이용일시), 'YYYY.MM')
+					WHEN O THEN '월별합계' 
+					ELSE TO_CHAR(A.이용일시, 'YYYY.MM')
+				END
+				) AS 이용월, 
+				SUM(A.이용량) AS 이용량
+FROM 이용내역 A 
+INNER JOIN 지역 B 
+ON (A.지역ID = B.지역ID)
+GROUP BY ROLLUP(B.지역명, TO_CHAR(A.이용일시, 'YYYY.MM'))
+
+② 
+SELECT (
+				CASE GROUPING(B.지역ID) 
+					WHEN 1 THEN '지역전체' 
+					ELSE MIN(B.지역명) 
+				END
+				) AS 지역명,
+				(
+				CASE GROUPING(TO_CHAR(A.이용일시, 'YYYY.MM'))
+					WHEN 1 THEN '월별합계'
+					ELSE TO_CHAR(A.이용일시, 'YYYY.MM')
+				END
+				) AS 이용월,
+				SUM(A.이용량) AS 이용량
+FROM 이용내역 A 
+INNER JOIN 지역 B 
+ON (A.지역ID = B.지역ID)
+GROUP BY ROLLUP(B.지역ID, TO_CHAR(A.이용일시, 'YYYY.MM')
+
+③ 
+SELECT (
+				CASE GROUPING(B.지역명) 
+					WHEN 1 THEN '지역전체'
+					ELSE B.지역명 
+				END
+				) AS 지역명, 
+			  (
+				CASE GROUPING(TO_CHAR(A.이용일시, 'YYYY.MM')
+					WHEN 1 THEN '월별합계'
+					ELSE TO_CHAR(A.이용일시, 'YYYY.MM')
+				END) AS 이용월,
+				SUM(A.이용량) AS 이용량
+FROM 이용내역 A 
+INNER JOIN 지역 B 
+ON (A.지역ID = B.지역ID)
+GROUP BY CUBE(B.지역명, TO_CHAR(A.이용일시, 'YYYY.MM')
+
+④ 
+SELECT (
+				CASE GROUPING(B.지역ID) 
+					WHEN 1 THEN '지역전체'
+					ELSE MIN(B.지역명) END
+				) AS 지역명, 
+				(
+				CASE GROUPING(TO CHAR(A.이용일시, 'YYYY.MM')
+					WHEN 1 THEN '월별합계'
+					ELSE TO_CHAR(A.이용일시, 'YYYY.MM')
+				END
+				) AS 이용월,
+				SUM(A.이용량) AS 이용량
+FROM 이용내역 A 
+INNER JOIN 지역 B 
+ON (A.지역ID = B.지역ID)
+GROUP BY GROUPING SETS(B.지역ID, TO CHAR(A.이용일시, 'YYYY.MM'))
+```
+
+- 위의 결과 데이터는 지역에 대해서 월별 이용량 및 소계와 전체 이용량을 출력하였으므로, ROLLUP 함수를 활용할 수 있다. ROLLUP 집계 그룹 함수는 나열된 칼럼에 대해 계층 구조로 집계를 출력하는 함수로서 ROLLUP(A, B)를 수행하면 (A, B)별 집계, A별 집계, 전체 집계를 출력할 수 있다.
+- ① CASE 절의 GROUPING 함수의 사용이 잘못(0이 아닌 1이 되어야 함)되었다.
+- ③ CUBE를 사용하면, 결합 가능한 모든 값에 대하여 다차원 집계를 생성한다.
+- ④ GROUPTING SETS를 사용하면 계층구조 없이 지역에 대한 합계와 월별 합계를 각각 생성하게 된다.
+
+- Grouping Columns가 가질 수 있는 모든 경우에 대하여 Subtotal을 생성해야 하는 경우에는 CUBE를 사용하는 것이 바람직하나, ROLLUP에 비해 시스템에 많은 부담을 주므로 사용에 주의해야 한다.
+
+- 롤업은 단계별 소계로 여러 단계로 나뉘어 그룹화 시킨다. 예를 들어 ROLLUP(a, b) 는 다음 3가지 형태의 그룹이 나온다.
+    - (a, b)
+    - (a)
+    - ()
+- GROUPING 함수는 이들 그룹을 구별하는 함수이다.
+    - Grouping 함수는 Roll up, Cube, Grouping sets 함수와 함께 쓰이며, Group by에서 쓰인 소계함수 결과 case에서 빠진(null 값을 가진) 칼럼에 대해 1을 반환한다.
+    - 예를 들어, Group by Roll up (col1, col2, col3) 을 수행하면
+    결과1 : col1, col2, col3
+    결과2 : col1, col2, null
+    결과3 : col1, null, null
+    결과4 : null, null, null → 전체합계
+    - 이때 Grouping 함수를 사용하면 null 값을 1로 바꿔서 출력한다.
+    Ex, 결과 2에서 Grouping(col3)을 하면 1이라는 값이 출력된다.
+    - 문제의 Group by Roll up(지역ID, 이용일시)를 수행하면,
+    결과1 : 지역ID, 이용일시
+    결과2 : 지역ID, null → (grouping) 지역ID , 1
+    결과3 : null, null → (grouping) 1, 1
+    - 따라서 Grouping(지역ID) = 1 일때는 지역전체, 아닌 경우에는 지역명이 되는 것이다.
+    이용일시도 마찬가지이다.
+- GROUPING(a)에서 a를 기준으로 집계했다면 0(일반 집계) 아니면 1(소계)이 된다.
+    - a의 원래 값이 출력 → 0
+    - a의 값이 NULL 로 출력 → 1
+- 각 그룹에서의 GROUPING(a)는
+    - (a, b) → 0
+    - (a) → 0
+    - () → 1
+- 각 그룹에서의 GROUPING(b)는
+    - (a, b) → 0
+    - (a) → 1
+    - () → 1
+- GROUPING() 함수의 결과(1 또는 0)에 따라 출력을 다르게 표현하려고 CASE 문을 사용했다.
+- 집계 쿼리에서는 GROUP BY 기준항목과 집계함수만 사용 가능하다. ①번 보기는 GROUP BY 지역명 했으므로 지역명을 그대로 사용 가능하지만, ②번 보기는 GROUP BY 지역ID 했으므로 지역명을 그대로 사용할 수 없으므로, 집계함수와 함께 사용해야 한다.
+- MIN(지역명), MAX(지역명) - 지역명은 지역ID에 종속되고, 지역명과 지역 ID는 1:1 관계일 것이다. 따라서, 하나의 지역 ID 안에는 지역명 1가지 값 뿐이므로 MIN(지역명), MAX(지역명) 모두 그 지역명으로 동일한 값이 출력된다.
+
+---
+
+Q. 아래 SQL에 대한 설명으로 가장 적절한 것은?
+
+> ①
+> 
+
+```sql
+SELECT EMPNO, SAL
+FROM EMP
+WHERE SAL >= ( 
+							SELECT MAX(SAL)
+							FROM EMP
+							GROUP BY DEPTNO
+							);
+```
+
+① ‘단일 행 하위 질의에 2개 이상의 행이 리턴되었습니다.’ 오류가 발생한다.
+
+② 부서별 최고연봉보다 크거나 같은 사원을 출력한다.
+
+③ 부서별 최고연봉 전부와 크거나 같은 연봉을 가진 사원을 출력하는 쿼리는 다음과 같이 변경할 수 있다.
+SELECT EMPNO, DEPTNO, SAL
+FROM EMP
+WHERE SAL >= ANY(SELECT MAX(SAL) FROM EMP GROUP BY DEPTNO);
+
+④ 부서별 최고연봉 중 하나보다 크거나 같은 연봉을 가진 사원을 출력하는 쿼리는 다음과 같이 변경할 수 있다.
+SELECT EMPNO, DEPTNO, SAL
+FROM DMP
+WHERE SAL >= ALL(SELECT MAX(SAL) FROM EMP GROUP BY DEPTNO);
+
+- 서브쿼리는 단일 행 또는 복수 행 비교 연산자와 함께 사용 가능하다. 단일 행 비교 연산자는 서비쿼리의 결과가 반드시 1건 이하여야 하고, 복수 행 비교 연산자는 서브쿼리의 결과 건수와 상관없다.
+
+---
+
+Q. 아래를 참고할 때 SQL의 빈칸에 들어갈 내용으로 가장 적절한 것은?
+
+> ①
+> 
+
+```sql
+SELECT DNAME, JOB, COUNT(EMPNO) TOTAL_EMP, SUM(SAL) TOTAL_SAL
+FROM EMP, DEPT
+WHERE DEPT.DEPTNO = EMP.DEPTNO
+GROUP BY ㉠ (DNAME, JOB)
+```
+
+[실행 결과]
+
+| DNAME | JOB | TOTAL_EMP | TOTAL_SAL |
+| --- | --- | --- | --- |
+| SALES | CLERK | 1 | 950 |
+| SALES | MANAGER | 1 | 2850 |
+| SALES | SALESMAN | 4 | 5600 |
+| SALES | NULL | 6 | 9400 |
+| RESEARCH | CLERK | 2 | 1900 |
+| RESEARCH | ANALYST | 2 | 6000 |
+| RESEARCH | MANAGER | 1 | 2975 |
+| RESEARCH | NULL | 5 | 10875 |
+| ACCOUNTING | CLERK | 1 | 1300 |
+| ACCOUNTING | MANAGER | 1 | 2450 |
+| ACCOUNTING | PRESIDENT | 1 | 5000 |
+| ACCOUNTING | NULL | 3 | 8750 |
+| NULL | NULL | 14 | 29025 |
+
+① ROLLUP (DNAME, JOB)
+
+② CUBE (DNAME, JOB)
+
+③ GROUPING SETS ((DNAME, JOB), DNAME)
+
+④ DNAME, ROLLUP (JOB)
+
+- 문제의 결과를 보고 NULL이 어떤식으로 나오는지를 보아야 한다. NULL의 위치로 어떤 그룹들이 있는지 알 수 있다.
+- 칼럼명을 간단하게 a, b 로 표현하자면, 이런 그룹은 롤업에 해당된다. 다음 3가지 그룹이 있다.
+    - (a, b) 모두 있는 그룹
+    - (a)만 있는 그룹
+    - () 둘 다 없는 그룹
+- 롤업은 단계별 집계 - 오른쪽 항목을 하나씩 지워나가면서 그룹핑
+- 큐브는 가능한 모든 조합별 집계 - 가능한 모든 항목들의 조합을 만들어 그룹핑
+- 그룹핑셋은 지정 조합별 집계 - 지정한 조합으로 그룹핑
+- 괄호는 한묶음
+- ROLLUP(a, b)
+    - (a, b)
+    - (a)
+    - ()
+- CUBE(a, b)
+    - (a, b)
+    - (a)
+    - (b)
+    - ()
+- GEOUPING SETS (a, (b, c))
+GEOUPING SETS ((a), (b, c))
+    - (a)
+    - (b, c)
+- ROLLUP(a, (b, c))
+    - (a, (b, c))
+    - (a)
+    - ()
+
+
+<br>
+**참고 자료**
+
+---
+
+- [https://nive.tistory.com/149 - CTE, 앵커 멤버](https://nive.tistory.com/149)
+- [https://goldswan.tistory.com/m/25 - NTILE](https://goldswan.tistory.com/m/25)
+- [https://cafe.naver.com/sqlpd/70472?tc=shared_link - 윈도 함수](https://cafe.naver.com/sqlpd/70472?tc=shared_link)
