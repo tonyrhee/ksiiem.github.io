@@ -1,5 +1,5 @@
---- 
-categories: [study, Spring]
+---
+categories: [Study, Spring]
 ---
 
 ## **레이어드 아키텍처(Layered Architecture) 란?**

@@ -1,6 +1,7 @@
 ---
-categories: [study, Spring]
+categories: [Study, Spring]
 ---
+
 **들어가기 전에**
 
 ---

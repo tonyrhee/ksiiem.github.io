@@ -1,5 +1,5 @@
 ---
-categories: [study, SpringBoot]
+categories: [Study, SpringBoot]
 ---
 
 ## HTTP 응답 방법 3가지

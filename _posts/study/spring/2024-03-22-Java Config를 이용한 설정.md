@@ -1,6 +1,7 @@
 ---
-categories: [study, Spring]
+categories: [Study, Spring]
 ---
+
 ## **Java Config를 이용한 설정**
 
 

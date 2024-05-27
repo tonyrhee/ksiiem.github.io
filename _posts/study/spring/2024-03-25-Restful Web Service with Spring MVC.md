@@ -1,5 +1,5 @@
 ---
-categories: [study, Spring]
+categories: [Study, Spring]
 ---
 
 ### **REST**

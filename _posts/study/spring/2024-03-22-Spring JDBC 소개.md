@@ -1,5 +1,5 @@
 ---
-categories: [study, Spring]
+categories: [Study, Spring]
 ---
 
 ## **1) Spring JDBC 소개**
