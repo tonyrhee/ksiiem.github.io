@@ -240,7 +240,7 @@ DispatcherServlet은 요청을 선처리하는 작업을 수행한다. 이 과�
 1. **지역화(Localization) 처리:**
     - DispatcherServlet이 요청을 선처리하는 작업 중 하나로, Spring MVC는 지역화를 지원하여 사용자가 원하는 언어로 화면을 보여줄 수 있다.
     - 사용자의 브라우저에서 전송된 헤더 정보를 통해 사용자의 언어 설정을 확인하고, 이를 기반으로 Locale을 결정한다. Locale은 언어, 국가 등의 정보를 포함하고 있어 언어 설정에 따라 다른 지역화된 내용을 제공할 수 있다.
-    - 결정된 Locale을 기반으로 각 요청에 맞는 지역화된 콘텐츠를 제공합니다.
+    - 결정된 Locale을 기반으로 각 요청에 맞는 지역화된 콘텐츠를 제공한다.
 2. **RequestContextHolder를 사용한 요청 저장:**
     - DispatcherServlet은 현재 요청을 스레드 로컬 객체인 RequestContextHolder에 저장한다.
     - 이를 통해 컨트롤러의 메서드에서 HttpServletRequest와 HttpServletResponse와 같은 Spring이 관리하는 객체를 쉽게 사용할 수 있다.
@@ -371,7 +371,7 @@ Spring은 Servlet API에 종속되지 않도록 하기 위해 ModelAndView와 �
     - 하지만 HandlerExceptionResolver가 ModelAndView 객체를 반환하지 않으면, DispatcherServlet은 발생한 예외를 다시 상위로 전파한다.
     - 이 경우 예외는 Servlet 컨테이너로 전달되어 기본 예외 처리 메커니즘에 따라 처리된다.
 
-예외 처리 단계에서는 예외 발생 시 HandlerExceptionResolver에게 처리를 요청하고, 해당 예외를 처리할 수 있는 Resolver를 찾아서 처리합니다. 처리된 결과에 따라 요청 처리를 재개하거나 예외를 다시 던지게 된다.
+예외 처리 단계에서는 예외 발생 시 HandlerExceptionResolver에게 처리를 요청하고, 해당 예외를 처리할 수 있는 Resolver를 찾아서 처리한다. 처리된 결과에 따라 요청 처리를 재개하거나 예외를 다시 던지게 된다.
 
 
 <br>
