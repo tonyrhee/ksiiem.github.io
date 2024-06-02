@@ -3,7 +3,7 @@ title: "[Interview] Web"
 categories: [Study, Interview]
 ---
 
-### **스프링 개요**
+## **스프링 개요**
 
 ---
 
@@ -12,14 +12,14 @@ categories: [Study, Interview]
     - 스프링이 경량화되었다는 것은, 전통적인 엔터프라이즈 자바 애플리케이션(J2EE)을 구축하는 데 필요한 복잡한 설정과 무거운 애플리케이션 서버의 필요성을 줄이고, 더 가볍고 유연한 방식으로 애플리케이션을 개발할 수 있게 한다는 의미이다.
     - ① POJO (Plain Old Java Object) 기반의 개발 ② 의존성 주입 (Dependency Injection)과 제어의 역전 (IoC) ③ 모듈화와 필요에 따른 사용
 
-### **스프링 vs 스프링 부트**
+## **스프링 vs 스프링 부트**
 
 ---
 
 - **스프링:** 전통적인 애플리케이션 개발 프레임워크
 - **스프링 부트:** 스프링 애플리케이션 설정을 간편하게 할 수 있는 서브 프로젝트이다. 독립 실행형 애플리케이션을 만들 수 있도록 임베디드 톰캣을 자동으로 실행하며, 설정을 최소화한다. 임베디드 컨테이너는 대규모 프로젝트에서는 다소 불안정할 수 있다.
 
-### **MVC 패턴**
+## **MVC 패턴**
 
 ---
 
@@ -29,7 +29,7 @@ categories: [Study, Interview]
     - **컨트롤러(Controller):** 모델과 뷰 사이의 정보 교환 역할.
     
 
-### **MVC1 vs MVC2 패턴**
+## **MVC1 vs MVC2 패턴**
 
 ---
 
@@ -43,7 +43,7 @@ categories: [Study, Interview]
     - **단점:** 구조가 복잡하다.
     
 
-### **스프링 MVC 구조 흐름**
+## **스프링 MVC 구조 흐름**
 
 ---
 
@@ -54,7 +54,7 @@ categories: [Study, Interview]
 5. **뷰(View):** 디스패처 서블릿에서 받은 모델과 컨트롤러를 활용하여 응답을 생성한다. 사용자에게 결과를 표시하는 역할을 한다. 뷰 리졸버에 의해 선택된 View를 사용하여 클라이언트에게 응답을 생성한다.
 6. **디스패처 서블릿:** 뷰로부터 받은 응답을 클라이언트에 전달한다.
 
-### **스프링 필터 vs 인터셉터**
+## **스프링 필터 vs 인터셉터**
 
 ---
 
@@ -76,15 +76,15 @@ categories: [Study, Interview]
     | 실행 시점 | 서블릿 컨테이너가 요청에 대한 응답을 생성하기 전에 요청과 응답을 처리한다. 따라서 서블릿을 실행하기 전과 후에 모두 동작할 수 있다. | 스프링의 컨트롤러를 실행하기 전과 후에 동작한다. 즉, 스프링의 DispatcherServlet이 요청을 처리하기 전에 인터셉터를 실행하고, DispatcherServlet이 뷰를 렌더링하기 전에도 인터셉터를 실행한다. |
     | 적용 범위 | 서블릿 컨테이너 레벨에서 동작하며, 모든 종류의 요청과 응답에 대해 적용된다. 주로 URL 패턴을 기반으로 동작하며, 서블릿 및 JSP 등에 적용된다. | 스프링의 컨텍스트 레벨에서 동작하며, 스프링 컨텍스트에 등록되어 특정한 핸들러(Controller)에만 적용된다. 스프링 빈에만 적용되며, 주로 컨트롤러의 메소드에 적용된다. |
 
-![이미지](/assets/img/study/interview/(1).png)
+![이미지](/assets/img/study/interview/web/(1).png)
 
-### **IOC (Inversion of Control)**
+## **IOC (Inversion of Control)**
 
 ---
 
 - **IOC:** 객체의 생성과 소멸을 개발자가 아닌 컨테이너가 관리하는 것을 의미한다. 서블릿과 같은 Bean을 관리하는 컨테이너가 인스턴스 생성의 제어를 맡는다.
 
-### **Dispatcher-Servlet**
+## **Dispatcher-Servlet**
 
 ---
 
@@ -94,9 +94,9 @@ categories: [Study, Interview]
     - **장점:** **`web.xml`**의 역할을 축소시키고, MVC 패턴을 활용한 웹 개발을 용이하게 한다.
     - 기존에는 모든 서블릿을 URL 매핑을 위해 일일이 **`web.xml`**에 등록해야 했지만, 디스패처 서블릿은 모든 요청을 핸들링하면서 서블릿들 간의 작업을 효율적으로 관리할 수 있도록 도와준다.
 
-![이미지](/assets/img/study/interview/(2).png)
+![이미지](/assets/img/study/interview/web/(2).png)
 
-### **DI (Dependency Injection)**
+## **DI (Dependency Injection)**
 
 ---
 
@@ -104,7 +104,7 @@ categories: [Study, Interview]
     - **장점:** 각 클래스가 의존하는 객체를 직접 생성하거나 검색할 필요가 없으므로 코드 관리가 용이하다.
     
 
-### **AOP (Aspect Oriented Programming)**
+## **AOP (Aspect Oriented Programming)**
 
 ---
 
@@ -121,52 +121,56 @@ categories: [Study, Interview]
 - **Weaving:** Advice를 핵심 로직 코드에 적용하는 과정이다.
 - **Aspect:** 여러 객체에 공통으로 적용되는 공통 관심 사항을 의미한다.(예: 트랜잭션, 보안 등).
 
-### **DAO (Data Access Object)**
+## **DAO (Data Access Object)**
 
 ---
 
 - **DAO란?**
-    - DB에 데이터를 조회하거나 조작하는 기능을 전담한다.
-    - MyBatis를 사용할 때는, **`mapper.xml`**에 쿼리문을 작성하고, 이를 매퍼 클래스에서 받아 DAO에게 전달한다.
+    - 데이터베이스의 데이터를 조회하거나 조작하는 기능을 전담한다.
+    - MyBatis를 사용 시, **`mapper.xml`**에 SQL 쿼리를 작성하고, 이를 Mapper 클래스에서 받아 DAO가 처리
     
-    ![이미지](/assets/img/study/interview/(3).png)
+    ![이미지](/assets/img/study/interview/web/(3).png)
     
-    ![이미지](/assets/img/study/interview/(4).png)
+    ![이미지](/assets/img/study/interview/web/(4).png)
     
-    ![이미지](/assets/img/study/interview/(5).png)
+    ![이미지](/assets/img/study/interview/web/(5).png)
     
 
-### **Annotation (어노테이션)**
+## **Annotation (어노테이션)**
 
 ---
 
 - **Annotation이란?**
-    - 소스코드에 **`@어노테이션`** 형태로 표현되며, 클래스, 필드, 메소드의 선언부에 특정 기능을 부여한다.
-    - 애플리케이션 규모가 커질수록 XML 환경설정이 복잡해지는데, 이를 개선하기 위해 자바 파일에 어노테이션을 적용하여 설정 파일 작업의 오류를 최소화한다.
+    - 소스코드에 **`@`** 형태로 표현되며, 클래스, 필드, 메소드의 선언부에 특정 기능을 부여한다.
+    - XML 설정의 복잡성을 줄이고 오류를 최소화
+        - 애플리케이션 규모가 커질수록 XML 환경설정이 복잡해지는데, 이를 개선하기 위해 자바 파일에 어노테이션을 적용하여 설정 파일 작업의 오류를 최소화한다.
     - 어노테이션을 사용하면 소스 코드에 메타데이터를 보관할 수 있고, 컴파일 타임 체크와 코드 가독성을 높이는 데 도움을 준다.
 - **주요 어노테이션:**
-    - **`@Controller`**: **`dispatcher-servlet.xml`**에서 **`bean`** 태그로 정의하는 것과 동일한 역할을 한다.
+    - **`@Controller`**: Dispatcher-Servlet에서 Bean 정의
     - **`@RequestMapping`**: 특정 메소드에 요청된 URL과 매핑시킨다.
     - **`@Autowired`**: 자동으로 의존성을 주입한다.
     - **`@Service`**: 비즈니스 로직을 처리하는 서비스 클래스에 등록한다.
     - **`@Repository`**: DAO 클래스에 등록한다.
 
-### **Spring JDBC**
+## **Spring JDBC**
 
 ---
 
 - **Spring JDBC란?**
-    - 데이터베이스 테이블과 자바 객체 사이의 단순한 매핑을 간단한 설정으로 처리한다.
+    - 자바 객체와 데이터베이스 테이블 간의 매핑을 간단한 설정으로 처리한다.
     - 기존의 JDBC에서는 구현 로직마다 필요한 SQL문이 모두 달랐고, Connection, PrepareStatement, ResultSet 등을 생성하고 Exception 처리도 해야 하는 번거로움이 있었다.
-    - 스프링에서는 JDBC와 ORM 프레임워크를 직접 지원하여 별도의 작성 없이 처리할 수 있다.
-    
+    - Connection, PrepareStatement, ResultSet 등을 관리하여 번거로움 해소
+        - 스프링에서는 JDBC와 ORM 프레임워크를 직접 지원하여 별도의 작성 없이 처리할 수 있다.
 
-### **MyBatis**
+## **MyBatis**
 
 ---
 
 - **MyBatis란?**
-    - 객체, 데이터베이스, 매퍼를 독립적으로 작성하고, DTO에 해당하는 부분과 SQL 실행 결과를 매핑할 수 있도록 지원한다.
-    - 기존에는 DAO에 SQL문이 자바 소스 코드에 위치했으나, MyBatis를 통해 SQL은 XML 설정 파일로 관리한다.
-    - 설정 파일로 분리하면 수정할 때 설정 파일만 변경하면 되므로 유지보수가 용이하다.
-    - 매개변수나 리턴 타입으로 매핑되는 모든 DTO 관련 부분도 설정 파일에서 작업할 수 있는 장점이 있다.
+    - SQL과 자바 객체 간의 매핑을 지원하는 프레임워크
+        - 객체, 데이터베이스, 매퍼를 독립적으로 작성하고, DTO에 해당하는 부분과 SQL 실행 결과를 매핑할 수 있도록 지원한다.
+    - SQL은 XML 설정 파일로 관리, 유지보수 용이
+        - 기존에는 DAO에 SQL문이 자바 소스 코드에 위치했으나, MyBatis를 통해 SQL은 XML 설정 파일로 관리한다.
+        - 설정 파일로 분리하면 수정할 때 설정 파일만 변경하면 되므로 유지보수가 용이하다.
+    - 매개변수와 리턴 타입 매핑도 설정 파일에서 관리
+        - 매개변수나 리턴 타입으로 매핑되는 모든 DTO 관련 부분도 설정 파일에서 작업할 수 있는 장점이 있다.
