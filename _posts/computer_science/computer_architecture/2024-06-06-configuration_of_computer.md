@@ -1,5 +1,5 @@
 ---
-title: "[Computer Architecture] 컴퓨터의 구성"
+title: "[Computer Architecture] Configuration of your computer"
 categories: [CS, Computer Architecture]
 ---
 
