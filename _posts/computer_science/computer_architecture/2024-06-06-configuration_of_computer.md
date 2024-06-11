@@ -1,6 +1,6 @@
 ---
 title: "[Computer Architecture] Configuration of your computer"
-categories: [CS, Computer Architecture]
+categories: [Study, CS]
 ---
 
 ## **컴퓨터의 구성**

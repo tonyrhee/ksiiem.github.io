@@ -1,6 +1,6 @@
 ---
 title: "[Computer Architecture] How CPU works"
-categories: [CS, Computer Architecture]
+categories: [Study, CS]
 ---
 
 ## **중앙처리장치(CPU) 작동 원리**
