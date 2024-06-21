@@ -1,22 +1,33 @@
 ---
-# the default layout is 'page'
-icon: fas fa-info-circle
-order: 4
+title:  "About Me"
+permalink: /about/
+layout: about
+published: true
+
+author_profile: true
 ---
 
-<!-- > Add Markdown syntax content to file `_tabs/about.md`{: .filepath } and it will show up on this page.
-{: .prompt-tip } -->
+### 하루하루 성장하는 개발자, 김세이입니다.
 
 
-<div align="center">
-  <h3>Flanesue 👣</h3>
-  <a href="https://www.notion.so/seikim/Sei-Kim-2d5ac550cc534edda4f0346c86c405bd?pvs=4" target="_blank"><img src="https://img.shields.io/badge/Notion-000000?style=flat&logo=Notion&&logoColor=white"/></a>
-  <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fesseikim%2F&count_bg=%23000000&title_bg=%23000000&icon=github.svg&icon_color=%23FFFFFF&title=GitHub&edge_flat=false"/></a>
-</div>
 
-<hr/>
+## 👨🏻‍🔧 About Me
+---
 
 
+<br>
+### **Introduction**
+
+▪ 밀도 있는 삶을 지향하며 어떤 경험에서든 배움을 얻고 실천하려 합니다.   
+▪ 사회의 핵심 인재, 공헌할 수 있는 사람이 되고 싶습니다.  
+▪ 숨은 인사이트를 발굴하고 효과적으로 제시하는 방법을 연구합니다.  
+▪ 기록과 공유의 가치를 알기에 학습한 것들을 Github에 남기고, 블로그를 운영하며 소통하고 있습니다.
+
+
+
+<br>
+## 🧩 Skill
+---
 <div align=center>
 
   <h4> [ TECT STACK ] </h4>
@@ -60,16 +71,15 @@ order: 4
   <img src="https://img.shields.io/badge/intellijidea-000000?style=for-the-badge&logo=intellijidea&logoColor=white">
   <img src="https://img.shields.io/badge/googlecolab-F9AB00?style=for-the-badge&logo=googlecolab&logoColor=white">
   
-  <br>
-
-  <hr/>
-  <br>
-  <div align="center">
-    <img src="https://mazassumnida.wtf/api/v2/generate_badge?boj=ksiiem">
-  </div>
-  
-  <br>
-  <hr/>
-  <img src="https://ghchart.rshah.org/219138/ksiiem">
 </div>
 
+
+<br>
+## 📜 Certificate 
+---
+
+**정보처리기사**
+
+**SQLD (SQL 개발자)**
+
+**컴퓨터활용능력 1급(필기 합)**
