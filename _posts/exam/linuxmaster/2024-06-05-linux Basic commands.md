@@ -1,6 +1,6 @@
 ---
 title: "[Linux] 기본 명령어"
-categories: [OS, Linux]
+categories: [Study, OS]
 ---
 
 ## **리눅스 기본 명령어**
