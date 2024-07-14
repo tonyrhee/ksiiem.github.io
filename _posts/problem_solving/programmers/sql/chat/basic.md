@@ -12,173 +12,518 @@ DDL commands are used to define and modify the structure of database objects suc
 
 1. **CREATE TABLE**: Create a new table.
     ```sql
+    CREATE TABLE 직원 (
+        직원ID INT PRIMARY KEY,
+        이름 VARCHAR(50),
+        나이 INT,
+        부서 VARCHAR(50)
+    );
+    ```
+
+2. **ALTER TABLE**: Modify an existing table (e.g., add a column).
+    ```sql
+    ALTER TABLE 직원
+    ADD COLUMN 입사일 DATE;
+    ```
+
+3. **DROP TABLE**: Delete an existing table.
+    ```sql
+    DROP TABLE 직원;
+    ```
+
+### Data Manipulation Language (DML)
+
+DML commands are used to manipulate the data stored in the database objects.
+
+1. **INSERT INTO**: Insert new records into a table.
+    ```sql
+    INSERT INTO 직원 (직원ID, 이름, 나이, 부서, 입사일)
+    VALUES (1, '홍길동', 30, '개발', '2023-01-15');
+    ```
+
+2. **SELECT**: Retrieve data from a table.
+    ```sql
+    SELECT * FROM 직원;
+    ```
+
+3. **UPDATE**: Update existing records in a table.
+    ```sql
+    UPDATE 직원
+    SET 나이 = 31
+    WHERE 직원ID = 1;
+    ```
+
+4. **DELETE**: Delete records from a table.
+    ```sql
+    DELETE FROM 직원
+    WHERE 직원ID = 1;
+    ```
+
+### Data Control Language (DCL)
+
+DCL commands are used to control access to data in the database.
+
+1. **GRANT**: Grant specific permissions to a user.
+    ```sql
+    GRANT SELECT, INSERT ON 직원 TO 사용자명;
+    ```
+
+2. **REVOKE**: Revoke specific permissions from a user.
+    ```sql
+    REVOKE INSERT ON 직원 FROM 사용자명;
+    ```
+
+### Example Tables
+
+1. **직원 (Employees) Table**:
+
+    | 직원ID (Employee ID) | 이름 (Name) | 나이 (Age) | 부서 (Department) | 입사일 (Join Date) |
+    |----------------------|-------------|------------|-------------------|--------------------|
+    | 1                    | 홍길동       | 30         | 개발              | 2023-01-15         |
+    | 2                    | 김영희       | 28         | 마케팅            | 2022-03-10         |
+    | 3                    | 박철수       | 35         | 영업              | 2021-07-22         |
+
+2. **Example DDL Commands**:
+    - Creating the `직원` table with additional column `입사일`:
+        ```sql
         CREATE TABLE 직원 (
-                직원ID INT PRIMARY KEY,
-                        이름 VARCHAR(50),
-                                나이 INT,
-                                        부서 VARCHAR(50)
-                                            );
-                                                ```
+            직원ID INT PRIMARY KEY,
+            이름 VARCHAR(50),
+            나이 INT,
+            부서 VARCHAR(50),
+            입사일 DATE
+        );
+        ```
+    - Adding a column to the `직원` table:
+        ```sql
+        ALTER TABLE 직원
+        ADD COLUMN 입사일 DATE;
+        ```
+    - Dropping the `직원` table:
+        ```sql
+        DROP TABLE 직원;
+        ```
 
-                                                2. **ALTER TABLE**: Modify an existing table (e.g., add a column).
-                                                    ```sql
-                                                        ALTER TABLE 직원
-                                                            ADD COLUMN 입사일 DATE;
-                                                                ```
+3. **Example DML Commands**:
+    - Inserting a new record into the `직원` table:
+        ```sql
+        INSERT INTO 직원 (직원ID, 이름, 나이, 부서, 입사일)
+        VALUES (1, '홍길동', 30, '개발', '2023-01-15');
+        ```
+    - Selecting all records from the `직원` table:
+        ```sql
+        SELECT * FROM 직원;
+        ```
+    - Updating a record in the `직원` table:
+        ```sql
+        UPDATE 직원
+        SET 나이 = 31
+        WHERE 직원ID = 1;
+        ```
+    - Deleting a record from the `직원` table:
+        ```sql
+        DELETE FROM 직원
+        WHERE 직원ID = 1;
+        ```
 
-                                                                3. **DROP TABLE**: Delete an existing table.
-                                                                    ```sql
-                                                                        DROP TABLE 직원;
-                                                                            ```
-
-                                                                            ### Data Manipulation Language (DML)
-
-                                                                            DML commands are used to manipulate the data stored in the database objects.
-
-                                                                            1. **INSERT INTO**: Insert new records into a table.
-                                                                                ```sql
-                                                                                    INSERT INTO 직원 (직원ID, 이름, 나이, 부서, 입사일)
-                                                                                        VALUES (1, '홍길동', 30, '개발', '2023-01-15');
-                                                                                            ```
-
-                                                                                            2. **SELECT**: Retrieve data from a table.
-                                                                                                ```sql
-                                                                                                    SELECT * FROM 직원;
-                                                                                                        ```
-
-                                                                                                        3. **UPDATE**: Update existing records in a table.
-                                                                                                            ```sql
-                                                                                                                UPDATE 직원
-                                                                                                                    SET 나이 = 31
-                                                                                                                        WHERE 직원ID = 1;
-                                                                                                                            ```
-
-                                                                                                                            4. **DELETE**: Delete records from a table.
-                                                                                                                                ```sql
-                                                                                                                                    DELETE FROM 직원
-                                                                                                                                        WHERE 직원ID = 1;
-                                                                                                                                            ```
-
-                                                                                                                                            ### Data Control Language (DCL)
-
-                                                                                                                                            DCL commands are used to control access to data in the database.
-
-                                                                                                                                            1. **GRANT**: Grant specific permissions to a user.
-                                                                                                                                                ```sql
-                                                                                                                                                    GRANT SELECT, INSERT ON 직원 TO 사용자명;
-                                                                                                                                                        ```
-
-                                                                                                                                                        2. **REVOKE**: Revoke specific permissions from a user.
-                                                                                                                                                            ```sql
-                                                                                                                                                                REVOKE INSERT ON 직원 FROM 사용자명;
-                                                                                                                                                                    ```
-
-                                                                                                                                                                    ### Example Tables
-
-                                                                                                                                                                    1. **직원 (Employees) Table**:
-
-                                                                                                                                                                        | 직원ID (Employee ID) | 이름 (Name) | 나이 (Age) | 부서 (Department) | 입사일 (Join Date) |
-                                                                                                                                                                            |----------------------|-------------|------------|-------------------|--------------------|
-                                                                                                                                                                                | 1                    | 홍길동       | 30         | 개발              | 2023-01-15         |
-                                                                                                                                                                                    | 2                    | 김영희       | 28         | 마케팅            | 2022-03-10         |
-                                                                                                                                                                                        | 3                    | 박철수       | 35         | 영업              | 2021-07-22         |
-
-                                                                                                                                                                                        2. **Example DDL Commands**:
-                                                                                                                                                                                            - Creating the `직원` table with additional column `입사일`:
-                                                                                                                                                                                                    ```sql
-                                                                                                                                                                                                            CREATE TABLE 직원 (
-                                                                                                                                                                                                                        직원ID INT PRIMARY KEY,
-                                                                                                                                                                                                                                    이름 VARCHAR(50),
-                                                                                                                                                                                                                                                나이 INT,
-                                                                                                                                                                                                                                                            부서 VARCHAR(50),
-                                                                                                                                                                                                                                                                        입사일 DATE
-                                                                                                                                                                                                                                                                                );
-                                                                                                                                                                                                                                                                                        ```
-                                                                                                                                                                                                                                                                                            - Adding a column to the `직원` table:
-                                                                                                                                                                                                                                                                                                    ```sql
-                                                                                                                                                                                                                                                                                                            ALTER TABLE 직원
-                                                                                                                                                                                                                                                                                                                    ADD COLUMN 입사일 DATE;
-                                                                                                                                                                                                                                                                                                                            ```
-                                                                                                                                                                                                                                                                                                                                - Dropping the `직원` table:
-                                                                                                                                                                                                                                                                                                                                        ```sql
-                                                                                                                                                                                                                                                                                                                                                DROP TABLE 직원;
-                                                                                                                                                                                                                                                                                                                                                        ```
-
-                                                                                                                                                                                                                                                                                                                                                        3. **Example DML Commands**:
-                                                                                                                                                                                                                                                                                                                                                            - Inserting a new record into the `직원` table:
-                                                                                                                                                                                                                                                                                                                                                                    ```sql
-                                                                                                                                                                                                                                                                                                                                                                            INSERT INTO 직원 (직원ID, 이름, 나이, 부서, 입사일)
-                                                                                                                                                                                                                                                                                                                                                                                    VALUES (1, '홍길동', 30, '개발', '2023-01-15');
-                                                                                                                                                                                                                                                                                                                                                                                            ```
-                                                                                                                                                                                                                                                                                                                                                                                                - Selecting all records from the `직원` table:
-                                                                                                                                                                                                                                                                                                                                                                                                        ```sql
-                                                                                                                                                                                                                                                                                                                                                                                                                SELECT * FROM 직원;
-                                                                                                                                                                                                                                                                                                                                                                                                                        ```
-                                                                                                                                                                                                                                                                                                                                                                                                                            - Updating a record in the `직원` table:
-                                                                                                                                                                                                                                                                                                                                                                                                                                    ```sql
-                                                                                                                                                                                                                                                                                                                                                                                                                                            UPDATE 직원
-                                                                                                                                                                                                                                                                                                                                                                                                                                                    SET 나이 = 31
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            WHERE 직원ID = 1;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ```
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                        - Deleting a record from the `직원` table:
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ```sql
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        DELETE FROM 직원
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                WHERE 직원ID = 1;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ```
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        4. **Example DCL Commands**:
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            - Granting permissions:
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ```sql
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            GRANT SELECT, INSERT ON 직원 TO 사용자명;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ```
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        - Revoking permissions:
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ```sql
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        REVOKE INSERT ON 직원 FROM 사용자명;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ```
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                This should give you a comprehensive overview of DDL, DML, and DCL commands with practical examples.
-
+4. **Example DCL Commands**:
+    - Granting permissions:
+        ```sql
+        GRANT SELECT, INSERT ON 직원 TO 사용자명;
+        ```
+    - Revoking permissions:
+        ```sql
+        REVOKE INSERT ON 직원 FROM 사용자명;
+        ```
 
 Here are some SQL examples where the absence of a `WHERE` clause results in updating all rows in a table:
 
 1. **UPDATE without WHERE Clause**:
     ```sql
-        UPDATE 테이블명
-            SET a = '1', b = '2';
-                ```
+    UPDATE 테이블명
+    SET a = '1', b = '2';
+    ```
 
-                    This query will set all values in the `a` column to '1' and all values in the `b` column to '2' for every row in the table `테이블명`.
+    This query will set all values in the `a` column to '1' and all values in the `b` column to '2' for every row in the table `테이블명`.
 
-                    2. **UPDATE without WHERE Clause in an Employee Table**:
-                        ```sql
-                            UPDATE 직원
-                                SET 급여 = 5000, 부서 = '영업';
-                                    ```
+2. **UPDATE without WHERE Clause in an Employee Table**:
+    ```sql
+    UPDATE 직원
+    SET 급여 = 5000, 부서 = '영업';
+    ```
 
-                                        This query will set the `급여` (salary) column to 5000 and the `부서` (department) column to '영업' (sales) for every row in the `직원` (employees) table.
+    This query will set the `급여` (salary) column to 5000 and the `부서` (department) column to '영업' (sales) for every row in the `직원` (employees) table.
 
-                                        3. **UPDATE without WHERE Clause in a Products Table**:
-                                            ```sql
-                                                UPDATE 제품
-                                                    SET 가격 = 10000, 재고 = 50;
-                                                        ```
+3. **UPDATE without WHERE Clause in a Products Table**:
+    ```sql
+    UPDATE 제품
+    SET 가격 = 10000, 재고 = 50;
+    ```
 
-                                                            This query will set the `가격` (price) column to 10000 and the `재고` (stock) column to 50 for every row in the `제품` (products) table.
+    This query will set the `가격` (price) column to 10000 and the `재고` (stock) column to 50 for every row in the `제품` (products) table.
 
-                                                            4. **UPDATE without WHERE Clause in a Customer Table**:
-                                                                ```sql
-                                                                    UPDATE 고객
-                                                                        SET 등급 = 'VIP', 포인트 = 100;
-                                                                            ```
+4. **UPDATE without WHERE Clause in a Customer Table**:
+    ```sql
+    UPDATE 고객
+    SET 등급 = 'VIP', 포인트 = 100;
+    ```
 
-                                                                                This query will set the `등급` (grade) column to 'VIP' and the `포인트` (points) column to 100 for every row in the `고객` (customers) table.
+    This query will set the `등급` (grade) column to 'VIP' and the `포인트` (points) column to 100 for every row in the `고객` (customers) table.
 
-                                                                                5. **UPDATE without WHERE Clause in an Orders Table**:
-                                                                                    ```sql
-                                                                                        UPDATE 주문
-                                                                                            SET 상태 = '배송 중', 배송비 = 0;
-                                                                                                ```
+5. **UPDATE without WHERE Clause in an Orders Table**:
+    ```sql
+    UPDATE 주문
+    SET 상태 = '배송 중', 배송비 = 0;
+    ```
 
-                                                                                                    This query will set the `상태` (status) column to '배송 중' (in delivery) and the `배송비` (shipping cost) column to 0 for every row in the `주문` (orders) table.
+    This query will set the `상태` (status) column to '배송 중' (in delivery) and the `배송비` (shipping cost) column to 0 for every row in the `주문` (orders) table.
 
-                                                                                                    In all these examples, because there is no `WHERE` clause, the update operation affects all rows in the respective tables, changing the specified columns to the new values provided.
+
+## practice
+These cover various aspects of SQL including data selection, insertion, updating, deletion, and more.
+
+1. **데이터 선택**:
+   ```sql
+   SELECT * FROM 고객;
+   ```
+
+2. **조건을 사용한 데이터 선택**:
+   ```sql
+   SELECT 이름, 나이 FROM 고객 WHERE 나이 > 30;
+   ```
+
+3. **정렬된 데이터 선택**:
+   ```sql
+   SELECT 이름, 나이 FROM 고객 ORDER BY 나이 DESC;
+   ```
+
+4. **데이터 삽입**:
+   ```sql
+   INSERT INTO 고객 (이름, 나이, 주소) VALUES ('홍길동', 28, '서울');
+   ```
+
+5. **데이터 업데이트**:
+   ```sql
+   UPDATE 고객 SET 주소 = '부산' WHERE 이름 = '홍길동';
+   ```
+
+6. **데이터 삭제**:
+   ```sql
+   DELETE FROM 고객 WHERE 나이 < 20;
+   ```
+
+7. **집계 함수 사용**:
+   ```sql
+   SELECT COUNT(*) FROM 고객;
+   ```
+
+8. **그룹화된 데이터 선택**:
+   ```sql
+   SELECT 나이, COUNT(*) FROM 고객 GROUP BY 나이;
+   ```
+
+9. **HAVING 절 사용**:
+   ```sql
+   SELECT 나이, COUNT(*) FROM 고객 GROUP BY 나이 HAVING COUNT(*) > 1;
+   ```
+
+10. **조인 사용**:
+    ```sql
+    SELECT 고객.이름, 주문.날짜 FROM 고객 INNER JOIN 주문 ON 고객.고객ID = 주문.고객ID;
+    ```
+
+11. **서브쿼리 사용**:
+    ```sql
+    SELECT 이름 FROM 고객 WHERE 나이 = (SELECT MAX(나이) FROM 고객);
+    ```
+
+12. **인덱스 생성**:
+    ```sql
+    CREATE INDEX idx_고객_나이 ON 고객(나이);
+    ```
+
+13. **제약 조건 추가**:
+    ```sql
+    ALTER TABLE 고객 ADD CONSTRAINT chk_나이 CHECK (나이 >= 18);
+    ```
+
+14. **기본값 설정**:
+    ```sql
+    ALTER TABLE 고객 ALTER COLUMN 나이 SET DEFAULT 18;
+    ```
+
+15. **PRIMARY KEY 설정**:
+    ```sql
+    ALTER TABLE 고객 ADD PRIMARY KEY (고객ID);
+    ```
+
+16. **FOREIGN KEY 설정**:
+    ```sql
+    ALTER TABLE 주문 ADD CONSTRAINT fk_고객 FOREIGN KEY (고객ID) REFERENCES 고객(고객ID);
+    ```
+
+17. **UNIQUE 제약 조건 추가**:
+    ```sql
+    ALTER TABLE 고객 ADD CONSTRAINT uq_이메일 UNIQUE (이메일);
+    ```
+
+18. **데이터베이스 생성**:
+    ```sql
+    CREATE DATABASE 회사;
+    ```
+
+19. **테이블 생성**:
+    ```sql
+    CREATE TABLE 제품 (
+        제품ID INT PRIMARY KEY,
+        이름 VARCHAR(50),
+        가격 DECIMAL(10, 2)
+    );
+    ```
+
+20. **트랜잭션 사용**:
+    ```sql
+    BEGIN TRANSACTION;
+    INSERT INTO 고객 (이름, 나이, 주소) VALUES ('김철수', 35, '대전');
+    COMMIT;
+    ```
+
+21. **VIEW 생성**:
+    ```sql
+    CREATE VIEW 고객뷰 AS
+    SELECT 이름, 나이, 주소 FROM 고객;
+    ```
+
+22. **VIEW를 사용하여 데이터 선택**:
+    ```sql
+    SELECT * FROM 고객뷰;
+    ```
+
+23. **DISTINCT 사용**:
+    ```sql
+    SELECT DISTINCT 나이 FROM 고객;
+    ```
+
+24. **CASE문 사용**:
+    ```sql
+    SELECT 이름, 나이,
+    CASE
+        WHEN 나이 < 20 THEN '젊음'
+        WHEN 나이 BETWEEN 20 AND 40 THEN '성인'
+        ELSE '노년'
+    END AS 연령대
+    FROM 고객;
+    ```
+
+25. **LIKE 연산자 사용**:
+    ```sql
+    SELECT * FROM 고객 WHERE 이름 LIKE '김%';
+    ```
+
+26. **IN 연산자 사용**:
+    ```sql
+    SELECT * FROM 고객 WHERE 나이 IN (25, 30, 35);
+    ```
+
+27. **BETWEEN 연산자 사용**:
+    ```sql
+    SELECT * FROM 고객 WHERE 나이 BETWEEN 20 AND 30;
+    ```
+
+28. **데이터베이스 삭제**:
+    ```sql
+    DROP DATABASE 회사;
+    ```
+
+29. **테이블 삭제**:
+    ```sql
+    DROP TABLE 제품;
+    ```
+
+30. **인덱스 삭제**:
+    ```sql
+    DROP INDEX idx_고객_나이 ON 고객;
+    ```
+
+31. **ALTER TABLE을 사용하여 열 추가**:
+    ```sql
+    ALTER TABLE 고객 ADD COLUMN 이메일 VARCHAR(100);
+    ```
+
+32. **ALTER TABLE을 사용하여 열 삭제**:
+    ```sql
+    ALTER TABLE 고객 DROP COLUMN 이메일;
+    ```
+
+33. **열 이름 변경**:
+    ```sql
+    ALTER TABLE 고객 RENAME COLUMN 나이 TO 연령;
+    ```
+
+34. **테이블 이름 변경**:
+    ```sql
+    ALTER TABLE 고객 RENAME TO 고객정보;
+    ```
+
+35. **데이터베이스 백업**:
+    ```sql
+    BACKUP DATABASE 회사 TO DISK = 'C:\backup\회사.bak';
+    ```
+
+36. **데이터베이스 복원**:
+    ```sql
+    RESTORE DATABASE 회사 FROM DISK = 'C:\backup\회사.bak';
+    ```
+
+37. **조건부 DELETE**:
+    ```sql
+    DELETE FROM 고객 WHERE 주소 = '부산';
+    ```
+
+38. **조건부 UPDATE**:
+    ```sql
+    UPDATE 고객 SET 나이 = 나이 + 1 WHERE 주소 = '서울';
+    ```
+
+39. **조인과 서브쿼리 결합**:
+    ```sql
+    SELECT 고객.이름, 주문.날짜
+    FROM 고객
+    JOIN 주문 ON 고객.고객ID = 주문.고객ID
+    WHERE 주문.날짜 = (SELECT MAX(날짜) FROM 주문 WHERE 고객ID = 고객.고객ID);
+    ```
+
+40. **집계 함수와 GROUP BY**:
+    ```sql
+    SELECT 주소, AVG(나이) AS 평균나이
+    FROM 고객
+    GROUP BY 주소;
+    ```
+
+41. **HAVING 절 사용**:
+    ```sql
+    SELECT 주소, COUNT(*) AS 고객수
+    FROM 고객
+    GROUP BY 주소
+    HAVING COUNT(*) > 2;
+    ```
+
+42. **SELF JOIN 사용**:
+    ```sql
+    SELECT A.이름 AS 고객1, B.이름 AS 고객2
+    FROM 고객 A, 고객 B
+    WHERE A.주소 = B.주소 AND A.고객ID < B.고객ID;
+    ```
+
+43. **FULL OUTER JOIN 사용**:
+    ```sql
+    SELECT A.이름 AS 고객명, B.제품명
+    FROM 고객 A
+    FULL OUTER JOIN 주문 B ON A.고객ID = B.고객ID;
+    ```
+
+44. **LEFT JOIN 사용**:
+    ```sql
+    SELECT A.이름, B.날짜
+    FROM 고객 A
+    LEFT JOIN 주문 B ON A.고객ID = B.고객ID;
+    ```
+
+45. **RIGHT JOIN 사용**:
+    ```sql
+    SELECT A.이름, B.날짜
+    FROM 고객 A
+    RIGHT JOIN 주문 B ON A.고객ID = B.고객ID;
+    ```
+
+46. **UNION 사용**:
+    ```sql
+    SELECT 이름 FROM 고객
+    UNION
+    SELECT 이름 FROM 직원;
+    ```
+
+47. **UNION ALL 사용**:
+    ```sql
+    SELECT 이름 FROM 고객
+    UNION ALL
+    SELECT 이름 FROM 직원;
+    ```
+
+48. **INTERSECT 사용**:
+    ```sql
+    SELECT 이름 FROM 고객
+    INTERSECT
+    SELECT 이름 FROM 직원;
+    ```
+
+49. **EXCEPT 사용**:
+    ```sql
+    SELECT 이름 FROM 고객
+    EXCEPT
+    SELECT 이름 FROM 직원;
+    ```
+
+50. **COUNT 사용**:
+    ```sql
+    SELECT COUNT(*) FROM 고객;
+    ```
+
+51. **SUM 사용**:
+    ```sql
+    SELECT SUM(가격) FROM 주문;
+    ```
+
+52. **AVG 사용**:
+    ```sql
+    SELECT AVG(가격) FROM 주문;
+    ```
+
+53. **MIN 사용**:
+    ```sql
+    SELECT MIN(가격) FROM 주문;
+    ```
+
+54. **MAX 사용**:
+    ```sql
+    SELECT MAX(가격) FROM 주문;
+    ```
+
+55. **ROUND 사용**:
+    ```sql
+    SELECT ROUND(AVG(가격), 2) FROM 주문;
+    ```
+
+56. **GROUP BY와 HAVING 결합**:
+    ```sql
+    SELECT 제품ID, SUM(수량) AS 총수량
+    FROM 주문
+    GROUP BY 제품ID
+    HAVING SUM(수량) > 10;
+    ```
+
+57. **서브쿼리를 사용한 UPDATE**:
+    ```sql
+    UPDATE 고객
+    SET 포인트 = 포인트 + 10
+    WHERE 고객ID IN (SELECT 고객ID FROM 주문 WHERE 날짜 = '2024-07-15');
+    ```
+
+58. **서브쿼리를 사용한 DELETE**:
+    ```sql
+    DELETE FROM 고객
+    WHERE 고객ID IN (SELECT 고객ID FROM 주문 WHERE 날짜 < '2023-01-01');
+    ```
+
+59. **IN 절과 서브쿼리 결합**:
+    ```sql
+    SELECT * FROM 고객
+    WHERE 고객ID IN (SELECT 고객ID FROM 주문 WHERE 금액 > 100000);
+    ```
+
+60. **EXISTS 절 사용**:
+    ```sql
+    SELECT * FROM 고객 A
+    WHERE EXISTS (SELECT 1 FROM 주문 B WHERE A.고객ID = B.고객ID);
+    ```
+
