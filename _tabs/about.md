@@ -280,7 +280,6 @@ author_profile: true
 
 
 <br>
-<br>
 ## 📜 Certificate 
 ---
 
