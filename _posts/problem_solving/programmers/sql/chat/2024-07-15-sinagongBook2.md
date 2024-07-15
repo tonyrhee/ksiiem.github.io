@@ -39,3 +39,29 @@ CREATE TABLE Instrctor (
 `Department테이블에서 튜플이 삭제 되면... `
 `Department dept속성이 변경되면 Instructor 의 관련되...`
 
+> 118 q-5
+
+```sql
+INSERT job CHAR(20) INTO TABLE patient
+
+ALTER TABLE patient
+job CHAR(20);
+
+```
+속성을 추가시 `ALTER`
+
+> 119 Q-6
+
+```sql
+
+
+```
+cc 뷰는 ccid, ccname instname속성을 갖는다
+
+cc뷰는 course 테이블의 id name Instructor테이블의 name 속성
+
+힌트 `create select from where` 사용함
+
+```sql
+
+```
