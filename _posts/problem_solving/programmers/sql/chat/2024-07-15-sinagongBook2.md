@@ -50,7 +50,7 @@ job CHAR(20);
 ```
 속성을 추가시 `ALTER`
 
-> 119 Q-6
+> 118 Q-6
 
 ```sql
 CREATE VIEW cc('ccid', 'ccname', 'instname')
@@ -62,6 +62,19 @@ cc 뷰는 ccid, ccname instname속성을 갖는다
 cc뷰는 course 테이블의 id name Instructor테이블의 name 속성
 
 힌트 `create select from where` 사용함 그리고 **중요** `Course의 instructor = Instructor.id` 라고 한 지문에 집중!
+
+> 118 q-7
+
+```sql
+CREATE TABLE 사원 (
+  사원번호 NUMBER(40 PRIMARY KEY,
+  사원명 VARCHAR2(10),
+  근무지번호 NUMBER(2) (문제1) 근무지
+  ON DELETE (문제2)
+);
+```
+1. FOREIGN KEY REFERENCES
+2. CASCADE
 
 ```sql
 
