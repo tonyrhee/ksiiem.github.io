@@ -5,7 +5,9 @@ tags: [Programmers, SQL, Oracle, chat]
 
 ## Sinagong
 ### book2
+
 > 118-q3
+
 ```sql
 CREATE TABLE patient (
     id VARCHAR(5) PRIMARY KEY,
