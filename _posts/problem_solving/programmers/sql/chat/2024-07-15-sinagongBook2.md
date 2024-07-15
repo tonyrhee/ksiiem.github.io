@@ -53,14 +53,15 @@ job CHAR(20);
 > 119 Q-6
 
 ```sql
-
-
+CREATE VIEW cc('ccid', 'ccname', 'instname')
+  FROM Course, Instructor
+  Where Course.instructor = Instructor.id;
 ```
 cc 뷰는 ccid, ccname instname속성을 갖는다
 
 cc뷰는 course 테이블의 id name Instructor테이블의 name 속성
 
-힌트 `create select from where` 사용함
+힌트 `create select from where` 사용함 그리고 **중요** `Course의 instructor = Instructor.id` 라고 한 지문에 집중!
 
 ```sql
 
